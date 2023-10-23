@@ -1,4 +1,6 @@
 import React, {useEffect, useState} from 'react'
+import Dictaphone  from './components/add.js';
+import AudioRecorder from './components/AudioRecorder.js';
 
 function App() {
 
@@ -17,6 +19,11 @@ function App() {
 
 
   return (
+    
+    
+
+
+
     <div>
       {(typeof backenData.users === 'undefined') ? (
       <p> loading...</p>):(
@@ -24,6 +31,13 @@ function App() {
           <p key= {i}>{user}</p>
         ))
       )}
+
+      <h1>Reconocimiento de Voz en App</h1>
+      <Dictaphone /> {/* Aquí estás utilizando el componente Dictaphone */}
+    
+      <div>
+      <AudioRecorder />
+      </div>
     </div>
   )
 }
