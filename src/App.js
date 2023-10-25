@@ -1,10 +1,16 @@
 import React, {useEffect, useState} from 'react'
+<<<<<<< Updated upstream
+=======
+import Dictaphone  from './components/add.js';
+import AudioRecorder from './components/AudioRecorder.js';
+import VoiceRecorder from './VoiceRecognition/audiocapture.js';
+>>>>>>> Stashed changes
 
 function App() {
 
   const [backenData, setBackendData] = useState(({}))
 
-  useEffect(() => {
+  /*useEffect(() => {
     fetch("/api").then(
       response => response.json()
     ).then(
@@ -13,7 +19,7 @@ function App() {
     )
   
   }, [])
-  
+  */
 
 
   return (
@@ -24,6 +30,16 @@ function App() {
           <p key= {i}>{user}</p>
         ))
       )}
+<<<<<<< Updated upstream
+=======
+
+      <h1>Reconocimiento de Voz en App</h1>
+      <Dictaphone />
+    
+      <div>
+      <VoiceRecorder />
+      </div>
+>>>>>>> Stashed changes
     </div>
   )
 }

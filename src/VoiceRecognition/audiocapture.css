@@ -1,0 +1,21 @@
+.microphone-button {
+  background-color: #3498db; /* Color de fondo */
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff; /* Color del texto */
+  border: 3px solid #3498db; /* Bordes ligeramente más anchos */
+  border-radius: 15px; /* Bordes circulares */
+  padding: 15px 30px; /* Ajusta el tamaño del botón */
+  font-size: 24px; /* Tamaño de la fuente del icono */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+  transition: background-color 0.2s, color 0.2s; /* Agrega una transición suave */
+  z-index: 999; /* encima de otros */
+
+}
+
+.microphone-button:hover {
+  background-color: #2976b9; /* Cambia el color de fondo al pasar el mouse */
+  color: #fff; /* Cambia el color del texto al pasar el mouse */
+}
