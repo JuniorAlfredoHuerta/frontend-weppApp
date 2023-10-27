@@ -1,21 +1,54 @@
 .microphone-button {
-  background-color: #3498db; /* Color de fondo */
+  width: 80px; /* Tamaño en píxeles */
+  height: 50px; /* Tamaño en píxeles */
+  background-color: #3498db;
   position: fixed;
   bottom: 10px;
   left: 50%;
+  padding: 8px 16px; /* Reducir el padding para hacerlo más pequeño */
   transform: translateX(-50%);
-  color: #fff; /* Color del texto */
-  border: 3px solid #3498db; /* Bordes ligeramente más anchos */
-  border-radius: 15px; /* Bordes circulares */
-  padding: 15px 30px; /* Ajusta el tamaño del botón */
-  font-size: 24px; /* Tamaño de la fuente del icono */
-  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-  transition: background-color 0.2s, color 0.2s; /* Agrega una transición suave */
-  z-index: 999; /* encima de otros */
+  color: #fff;
+  border: 2px solid #3498db; /* Reducir el ancho del borde */
+  border-radius: 10px; /* Reducir el radio de los bordes para hacerlo menos circular */
+  font-size: 20px; /* Reducir el tamaño de la fuente del icono */
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  z-index: 999;
+}
 
+.container-with-blue-background {
+  background-color: rgba(52, 187, 228, 0.533); /* Color de fondo celeste */
+  padding: 40px; /* Espacio alrededor del botón */
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 900; /* Asegura que el contenedor esté en la parte superior */
 }
 
 .microphone-button:hover {
-  background-color: #2976b9; /* Cambia el color de fondo al pasar el mouse */
+  background-color: #a1bd4c; /* Cambia el color de fondo al pasar el mouse */
   color: #fff; /* Cambia el color del texto al pasar el mouse */
+}
+
+.recording-message {
+  position: absolute;
+  top: 10px; /* Ajusta la posición vertical según tus necesidades */
+  left: 10px; /* Ajusta la posición horizontal según tus necesidades */
+  background-color: red; /* Cambia el color de fondo según tus preferencias */
+  color: white; /* Cambia el color del texto según tus preferencias */
+  padding: 5px 10px; /* Ajusta el espaciado interno según tus necesidades */
+  border-radius: 5px; /* Añade bordes redondeados */
+  z-index: 1;
+}
+
+.recording-message::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent red transparent;
+  transform: translateX(-50%);
 }

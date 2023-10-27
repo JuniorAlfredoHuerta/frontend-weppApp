@@ -1,14 +1,12 @@
-import React, {useEffect, useState} from 'react'
-<<<<<<< Updated upstream
-=======
-import Dictaphone  from './components/add.js';
-import AudioRecorder from './components/AudioRecorder.js';
-import VoiceRecorder from './VoiceRecognition/audiocapture.js';
->>>>>>> Stashed changes
-
+import React from 'react'
+//import Dictaphone  from './components/add.js';
+import MainMenu from './components/MainMenu';
+import { BrowserRouter as Router, Route, Switch, Link, Routes } from 'react-router-dom';
+import AgregarProducto from './components/AddProducto/AddProducto';
 function App() {
 
-  const [backenData, setBackendData] = useState(({}))
+
+  //const [backenData, setBackendData] = useState(({}))
 
   /*useEffect(() => {
     fetch("/api").then(
@@ -23,24 +21,22 @@ function App() {
 
 
   return (
+    <Router>
     <div>
-      {(typeof backenData.users === 'undefined') ? (
+      {/*{(typeof backenData.users === 'undefined') ? (
       <p> loading...</p>):(
         backenData.users.map((user,i) => (
           <p key= {i}>{user}</p>
         ))
-      )}
-<<<<<<< Updated upstream
-=======
-
-      <h1>Reconocimiento de Voz en App</h1>
-      <Dictaphone />
-    
-      <div>
-      <VoiceRecorder />
-      </div>
->>>>>>> Stashed changes
+        )}*/}
     </div>
+    <Routes>
+        <Route exact path="/mainmenu" Component={MainMenu}/>
+        <Route exact path="/agregar" Component={AgregarProducto}/>
+    </Routes>
+        
+    </Router>
+    
   )
 }
 

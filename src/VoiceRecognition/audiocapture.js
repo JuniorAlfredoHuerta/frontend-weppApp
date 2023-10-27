@@ -4,11 +4,55 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
 import './audiocapture.css';
 
-const AudioRecorder = () => {
+
+const AudioRecorder = ( {onApiResponse}) => {
   const mediaRecorder = useRef(null);
   const audioChunks = useRef([]);
   const [isRecording, setIsRecording] = useState(false);
 
+  const startRecording = () => {
+    if (!isRecording) {
+      navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then((stream) => {
+          mediaRecorder.current = new MediaRecorder(stream);
+          mediaRecorder.current.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+              audioChunks.current.push(event.data);
+            }
+          };
+          mediaRecorder.current.start();
+          setIsRecording(true);
+        })
+        .catch((error) => {
+          console.error("Error starting recording:", error);
+        });
+    }
+  };
+  const stopRecording = () => {
+    if (isRecording) {
+      mediaRecorder.current.stop();
+      mediaRecorder.current.onstop = async () => {
+        const blob = new Blob(audioChunks.current, { type: "audio/webm" });
+        const arrayBuffer = await blob.arrayBuffer();
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        const wavArrayBuffer = toWav(audioBuffer);
+        const wavBlob = new Blob([wavArrayBuffer], { type: 'audio/wav' });
+  
+        try {
+          await sendAudioToAPI(wavBlob, 'recorded-audio.wav');
+        } catch (error) {
+          console.error(error);
+        }
+  
+        mediaRecorder.current = null;
+        audioChunks.current = [];
+        setIsRecording(false);
+      };
+    }
+  };
+  
   const toggleRecording = () => {
     if (isRecording) {
       // Detener la grabación
@@ -36,9 +80,9 @@ const AudioRecorder = () => {
           //document.body.appendChild(a);
           //a.click();
           //URL.revokeObjectURL(url);
-          //mediaRecorder.current = null;
-          //audioChunks.current = [];
-          //setIsRecording(false);
+          mediaRecorder.current = null;
+          audioChunks.current = [];
+          setIsRecording(false);
         };
       }
     } else {
@@ -69,7 +113,6 @@ const AudioRecorder = () => {
     try {
       const response = await fetch('http://localhost:5000/transcribe', {
         method: 'POST',
-        
         body: formData,
       });
   
@@ -82,6 +125,7 @@ const AudioRecorder = () => {
       // Manejar la respuesta JSON
       console.log(data); // Imprimir la respuesta JSON en la consola
   
+      onApiResponse(data);
       // Aquí puedes agregar más lógica para trabajar con los datos, por ejemplo, actualizar el estado de tu componente React
     } catch (error) {
       console.error(error);
@@ -90,11 +134,12 @@ const AudioRecorder = () => {
   };
 
   return (
-    <div>
+    <div className="container-with-blue-background">
+      {isRecording && <div className="recording-message">Grabando...</div>}
+
       <button
         className={`microphone-button ${isRecording ? "recording" : ""}`}
-        onClick={toggleRecording}
-      >
+            onClick={toggleRecording}>
           <FontAwesomeIcon icon={faMicrophone} /> 
       </button>
     </div>
