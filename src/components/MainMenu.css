@@ -1,24 +1,93 @@
 .menu-container {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .main-menu {
-    background-color: #3498db;
-    color: #fff;
-    padding: 10px;
-    text-align: center;
-  }
-  
-  .icon-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-  }
-  
-  .icon {
-    font-size: 24px;
-    margin: 10px;
-    color: #3498db; /* Color de los iconos */
-  }
+  display: flex;
+  flex-direction: column;
+}
+
+.main-menu {
+  background-color: #3498db;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+}
+
+.icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.icon {
+  font-size: 24px;
+  margin: 10px;
+  color: #3498db; /* Color de los iconos */
+}
+.modal {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+/* Contenido del modal */
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+  width: 300px;
+}
+
+/* Botón de cierre */
+.close {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  color: #888;
+}
+
+.select {
+  width: 200px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none; /* Elimina el borde en el foco */
+}
+
+.selected-bodega {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f7f7f7;
+}
+
+.menu-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #3498db;
+}
+
+.menu-title {
+  margin: 0;
+}
+
+.menu-button {
+  background-color: #ffffff;
+  padding: 8px 16px;
+  border: 2px solid #030303;
+  border-radius: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}

@@ -1,43 +1,37 @@
-import React from 'react'
+import React from "react";
 //import Dictaphone  from './components/add.js';
-import MainMenu from './components/MainMenu';
-import { BrowserRouter as Router, Route, Switch, Link, Routes } from 'react-router-dom';
-import AgregarProducto from './components/AddProducto/AddProducto';
+import MainMenu from "./components/MainMenu";
+import {
+  BrowserRouter as Router,
+  Route,
+  useNavigate,
+  Link,
+  Routes,
+  BrowserRouter,
+} from "react-router-dom";
+import AgregarProducto from "./components/Producto/AddProducto";
+import Login from "../src/components/login/login";
+import { AuthProvider } from "./components/context/AuthContext";
+import ProtectedRoute from "./ProtectedRoutes";
+import Agregarstock from "./components/Producto/AddStock";
+import { BodegaProvider } from "./components/context/BodegaContext";
+
 function App() {
-
-
-  //const [backenData, setBackendData] = useState(({}))
-
-  /*useEffect(() => {
-    fetch("/api").then(
-      response => response.json()
-    ).then(
-      data => {
-        setBackendData(data)},
-    )
-  
-  }, [])
-  */
-
-
   return (
-    <Router>
-    <div>
-      {/*{(typeof backenData.users === 'undefined') ? (
-      <p> loading...</p>):(
-        backenData.users.map((user,i) => (
-          <p key= {i}>{user}</p>
-        ))
-        )}*/}
-    </div>
-    <Routes>
-        <Route exact path="/mainmenu" Component={MainMenu}/>
-        <Route exact path="/agregar" Component={AgregarProducto}/>
-    </Routes>
-        
-    </Router>
-    
-  )
+    <AuthProvider>
+      <BodegaProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route exact path="/" Component={Login} />
+            <Route element={<ProtectedRoute />}>
+              <Route exact path="/mainmenu" Component={MainMenu} />
+              <Route exact path="/agregar" Component={Agregarstock} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </BodegaProvider>
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;
