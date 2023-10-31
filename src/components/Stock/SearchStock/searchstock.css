@@ -1,0 +1,147 @@
+/* AgregarProducto.css */
+.agregar-producto {
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.menu-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #3498db;
+}
+
+.menu-title {
+  margin: 0;
+}
+
+.menu-button {
+  background-color: #ffffff;
+  padding: 8px 16px;
+  border: 2px solid #030303;
+  border-radius: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.registro-inputs:focus {
+  width: calc(100% - 20px);
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 5px #3498db;
+}
+
+/* Estilos para los inputs cuando NO están enfocados */
+.registro-inputs:not(:focus) {
+  width: calc(100% - 20px);
+  /* Puedes definir aquí el estilo que deseas que se mantenga incluso cuando el input no está enfocado */
+}
+
+.audio-recorder {
+  position: fixed;
+  bottom: 0;
+  opacity: 1;
+}
+
+/* Estilos generales */
+.modal {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: white;
+  width: 60%;
+  max-width: 600px;
+  margin: 100px auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.form-css {
+  padding-top: 20px;
+  margin: 20px;
+}
+
+.audio-recorder {
+  position: fixed;
+  bottom: 0;
+  opacity: 1;
+}
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.product-link {
+  width: calc(50% - 10px); /* Ancho del 50% con espacio entre los elementos */
+  padding: 10px;
+  box-sizing: border-box;
+  margin-bottom: 20px; /* Espacio entre las filas */
+  border: 1px solid #ccc;
+}
+
+.textname {
+  text-align: left;
+  margin-bottom: 10px;
+}

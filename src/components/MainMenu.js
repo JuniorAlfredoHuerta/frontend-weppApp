@@ -1,32 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faHome,
-  faUser,
-  faCog,
   faSignOut,
+  faAdd,
+  faRectangleList,
+  faCartArrowDown,
+  faSheetPlastic,
 } from "@fortawesome/free-solid-svg-icons";
 import AudioRecorder from "../VoiceRecognition/audiocapture.js";
 import "./MainMenu.css";
 import { Link, useNavigate } from "react-router-dom";
-import AddBodegaPage from "./Bodega/bodega.js";
+import AddBodegaPage from "./Bodega/addbodega.js";
 import { useBodega } from "./context/BodegaContext.js";
 import { useAuth } from "./context/AuthContext.js";
+import Cookies from "js-cookie";
 
 function MainMenu() {
   const [apiData, setApiData] = useState(null);
   const [modal, setModal] = useState(false);
   const navigate = useNavigate();
-  const { getBodegas, bodegas } = useBodega();
+  const { getBodegas, bodegas, gettokenbodega, calltokenbodega } = useBodega();
 
   useEffect(() => {
     getBodegas();
-  }, []);
+  }, [bodegas]);
 
   const handleApiResponse = (data) => {
     setApiData(data);
     if (data.transcription && data.transcription.comando === "agregar") {
       navigate("/agregar");
+    }
+    if (data.transcription && data.transcription.comando === "buscar") {
+      navigate("/buscar");
     }
   };
 
@@ -42,28 +47,69 @@ function MainMenu() {
 
   //seleccionador
   const [selectedBodega, setSelectedBodega] = useState("");
+  const [selectedId] = useState(null);
+  const [selectedNombre] = useState(null);
 
-  const handleSelectChange = (event) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      const cookies = Cookies.get();
+      if (cookies.tokenbodega) {
+        try {
+          const bodegadeltoken = await calltokenbodega();
+          console.log(bodegadeltoken.data);
+
+          setSelectedBodega({
+            id: bodegadeltoken.data.id,
+            nombre: bodegadeltoken.data.nombre,
+          });
+          // Realiza aquí las operaciones que necesites con bodegadeltoken
+        } catch (error) {
+          console.error("Error al obtener la información de la bodega:", error);
+        }
+      } else {
+        console.log("No hay token");
+      }
+    };
+
+    fetchData(); // Llamada a la función asincrónica
+  }, []);
+
+  const handleSelectChange = async (event) => {
     const selectedId = event.target.value;
     const selectedNombre = bodegas.find(
       (bodega) => bodega._id === selectedId
     ).nombrebodega;
-    setSelectedBodega({ id: selectedId, nombre: selectedNombre });
+    console.log(selectedId);
+    await gettokenbodega(selectedId);
+
+    try {
+      setSelectedBodega({ id: selectedId, nombre: selectedNombre });
+
+      // Llamada a calltokenbodega después de haber establecido el nuevo estado
+      const res = await calltokenbodega();
+      console.log(res.data);
+      const cookies = Cookies.get();
+      console.log(cookies.tokenbodega);
+
+      // Realiza otras operaciones con la respuesta (res) si es necesario
+
+      // Llamada a gettokenbodega para actualizar el token
+    } catch (error) {
+      console.error("Error al obtener la información de la bodega:", error);
+    }
   };
 
   return (
     <div className="menu-container">
       <nav className="menu-nav">
-        {" "}
         <h1 className="menu-title">Menu Principal</h1>{" "}
         <Link to="/" onClick={() => logout()}>
           <div className="menu-button">
-            {" "}
             <FontAwesomeIcon icon={faSignOut} />
           </div>
         </Link>
       </nav>
-      <div>Bienvenido {user.username}</div>
+      <div className="text-style">Bienvenido {user.username}</div>
       <div className="App">
         {modal && (
           <div className="modal">
@@ -79,43 +125,97 @@ function MainMenu() {
 
       <div
         className="container"
-        style={{ display: "flex", alignItems: "center" }}
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
       >
         <select
           value={selectedBodega.id}
           onChange={handleSelectChange}
           className="select"
         >
-          <option value="">Selecciona una bodega</option>
+          {!Cookies.get("tokenbodega") && (
+            <option value="">Selecciona una bodega</option>
+          )}
+
+          {bodegas.length === 0 && (
+            <option value disabled="">
+              Cree una bodega
+            </option>
+          )}
+
           {bodegas.map((bodega) => (
             <option key={bodega._id} value={bodega._id}>
               {bodega.nombrebodega}
             </option>
           ))}
         </select>
-        <button onClick={openModal}>Abrir Ventana Emergente</button>
+        <button className="button_add" onClick={openModal}>
+          <FontAwesomeIcon className="icon" icon={faAdd} />
+        </button>
       </div>
 
       <div className="icon-container">
-        <Link to="/agregar">
-          <FontAwesomeIcon className="icon" icon={faHome} />
-        </Link>
-        <FontAwesomeIcon className="icon" icon={faUser} />
-        <FontAwesomeIcon className="icon" icon={faCog} />
+        <div className="icon-row">
+          <Link to="/agregar">
+            <div style={{ textAlign: "center" }}>
+              <FontAwesomeIcon
+                icon={faAdd}
+                size="5x"
+                color="blue"
+                style={{ marginBottom: "10px", marginRight: "30px" }}
+              />
+              <div style={{ marginBottom: "10px", marginRight: "30px" }}>
+                Agregar Producto
+              </div>
+            </div>
+          </Link>
+          <Link to="/buscar">
+            <div style={{ textAlign: "center" }}>
+              <FontAwesomeIcon
+                icon={faRectangleList}
+                size="5x"
+                color="blue"
+                style={{ marginBottom: "10px", marginLeft: "30px" }}
+              />
+              <div style={{ marginBottom: "10px", marginLeft: "30px" }}>
+                Buscar Producto
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        <div className="icon-row">
+          <div style={{ textAlign: "center" }}>
+            <FontAwesomeIcon
+              icon={faCartArrowDown}
+              size="4x"
+              color="blue"
+              style={{ marginBottom: "10px", marginRight: "30px" }}
+            />
+            <div style={{ marginBottom: "10px", marginRight: "30px" }}>
+              Venta de Producto
+            </div>
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <FontAwesomeIcon
+              icon={faSheetPlastic}
+              size="4x"
+              color="blue"
+              style={{ marginBottom: "10px", marginLeft: "30px" }}
+            />
+            <div style={{ marginBottom: "10px", marginLeft: "30px" }}>
+              Generar Informe
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
+
+      <div className="audio-recorder">
         <AudioRecorder onApiResponse={handleApiResponse} />
       </div>
-      {/* Mostrar los datos cuando apiData no es null */}
-      {apiData && apiData.transcription && (
-        <div>
-          <p>Cantidad: {apiData.transcription.cantidad}</p>
-          <p>Comando: {apiData.transcription.comando}</p>
-          <p>Nombre del producto: {apiData.transcription.nombre_producto}</p>
-          <p>Precio: {apiData.transcription.precio}</p>
-          <p>Texto: {apiData.transcription.texto}</p>
-        </div>
-      )}
     </div>
   );
 }

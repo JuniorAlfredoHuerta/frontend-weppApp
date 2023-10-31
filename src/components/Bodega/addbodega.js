@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
-import "./bodega.css";
+import "./addbodega.css";
 import { useBodega } from "../context/BodegaContext";
 
 function AddBodegaPage({ closeModal }) {
   const { register, handleSubmit } = useForm();
-  const { bodegas, createBodega, getBodegas } = useBodega();
+  const { createBodega, getBodegas } = useBodega();
 
   const onSubmit = handleSubmit(async (data) => {
     createBodega(data);
@@ -38,6 +38,7 @@ function AddBodegaPage({ closeModal }) {
           placeholder=" Ubicación de la bodega"
           className="registro-inputs"
         ></input>
+
         <button type="submit">Registrar Bodega</button>
       </form>
     </div>

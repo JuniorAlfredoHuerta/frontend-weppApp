@@ -1,34 +1,23 @@
 .menu-container {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .main-menu {
-    background-color: #3498db;
-    color: #fff;
-    padding: 20px;
-    height: 100%;
-    text-align: center;
-  }
-  
-  .icon-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-  }
-  
-  .icon {
-    font-size: 24px;
-    margin: 10px;
-    color: #3498db; /* Color de los iconos */
-  }
-  .container {
-    width: 300px;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #fff;
-    margin: auto; /* Utiliza márgenes automáticos */
-  }
-  
+  display: flex;
+  flex-direction: column;
+}
+
+.main-menu {
+  background-color: #3498db;
+  color: #fff;
+  padding: 20px;
+  width: 100%;
+  text-align: center;
+  position: relative; /* Añadir posición relativa */
+  z-index: 1; /* Asegurar que el menú esté en una capa superior */
+}
+
+.container {
+  width: 300px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  margin: 20px auto; /* Utiliza márgenes automáticos */
+}
