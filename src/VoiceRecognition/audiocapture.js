@@ -47,6 +47,14 @@ const AudioRecorder = ({ onApiResponse }) => {
           console.error(error);
         }
 
+        ////DECARGA DE ARCHIVO
+        //const url = URL.createObjectURL(blob);
+        //const a = document.createElement("a");
+        //a.href = url;
+        //a.download = "recorded-audio.wav";
+        //document.body.appendChild(a);
+        //a.click();
+        //URL.revokeObjectURL(url);
         mediaRecorder.current = null;
         audioChunks.current = [];
         setIsRecording(false);

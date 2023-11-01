@@ -24,11 +24,11 @@ export const AuthProvider = ({ children }) => {
   const signup = async (user) => {
     try {
       const res = await registerRequest(user);
-      console.log(res.data);
+      //console.log(res.data);
       setUser(res.data);
       setIsAuthenticated(true);
     } catch (error) {
-      console.log(error.response.data);
+      //console.log(error.response.data);
       setErros(error.response.data);
     }
   };
@@ -36,16 +36,18 @@ export const AuthProvider = ({ children }) => {
   const signin = async (user) => {
     try {
       const res = await loginRequest(user);
-      console.log(res.data);
+      //console.log(res.data);
       setUser(res.data);
       setIsAuthenticated(true);
     } catch (error) {
-      console.log(error.response.data);
+      //console.log(error.response.data);
       setErros(error.response.data);
     }
   };
   const logout = () => {
     Cookies.remove("token");
+    Cookies.remove("tokenbodega");
+
     setUser(null);
     setIsAuthenticated(false);
   };

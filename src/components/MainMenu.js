@@ -27,11 +27,18 @@ function MainMenu() {
 
   const handleApiResponse = (data) => {
     setApiData(data);
-    if (data.transcription && data.transcription.comando === "agregar") {
-      navigate("/agregar");
-    }
-    if (data.transcription && data.transcription.comando === "buscar") {
-      navigate("/buscar");
+    if (Cookies.get("tokenbodega")) {
+      if (data.transcription && data.transcription.comando === "agregar") {
+        navigate("/agregar");
+      }
+      if (data.transcription && data.transcription.comando === "buscar") {
+        navigate("/buscar");
+      }
+      if (data.transcription && data.transcription.comando === "vender") {
+        navigate("/venta");
+      }
+    } else {
+      console.log("ELIJA BODEGA");
     }
   };
 
@@ -56,7 +63,6 @@ function MainMenu() {
       if (cookies.tokenbodega) {
         try {
           const bodegadeltoken = await calltokenbodega();
-          console.log(bodegadeltoken.data);
 
           setSelectedBodega({
             id: bodegadeltoken.data.id,
@@ -159,57 +165,69 @@ function MainMenu() {
 
       <div className="icon-container">
         <div className="icon-row">
-          <Link to="/agregar">
-            <div style={{ textAlign: "center" }}>
-              <FontAwesomeIcon
-                icon={faAdd}
-                size="5x"
-                color="blue"
-                style={{ marginBottom: "10px", marginRight: "30px" }}
-              />
-              <div style={{ marginBottom: "10px", marginRight: "30px" }}>
-                Agregar Producto
+          {Cookies.get("tokenbodega") && (
+            <Link to="/agregar">
+              <div style={{ textAlign: "center" }}>
+                <FontAwesomeIcon
+                  icon={faAdd}
+                  size="5x"
+                  color="blue"
+                  style={{ marginBottom: "10px", marginRight: "30px" }}
+                />
+                <div style={{ marginBottom: "10px", marginRight: "30px" }}>
+                  Agregar Producto
+                </div>
               </div>
-            </div>
-          </Link>
-          <Link to="/buscar">
-            <div style={{ textAlign: "center" }}>
-              <FontAwesomeIcon
-                icon={faRectangleList}
-                size="5x"
-                color="blue"
-                style={{ marginBottom: "10px", marginLeft: "30px" }}
-              />
-              <div style={{ marginBottom: "10px", marginLeft: "30px" }}>
-                Buscar Producto
+            </Link>
+          )}
+          {Cookies.get("tokenbodega") && (
+            <Link to="/buscar">
+              <div style={{ textAlign: "center" }}>
+                <FontAwesomeIcon
+                  icon={faRectangleList}
+                  size="5x"
+                  color="blue"
+                  style={{ marginBottom: "10px", marginLeft: "30px" }}
+                />
+                <div style={{ marginBottom: "10px", marginLeft: "30px" }}>
+                  Buscar Producto
+                </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+          )}
         </div>
 
         <div className="icon-row">
-          <div style={{ textAlign: "center" }}>
-            <FontAwesomeIcon
-              icon={faCartArrowDown}
-              size="4x"
-              color="blue"
-              style={{ marginBottom: "10px", marginRight: "30px" }}
-            />
-            <div style={{ marginBottom: "10px", marginRight: "30px" }}>
-              Venta de Producto
-            </div>
-          </div>
-          <div style={{ textAlign: "center" }}>
-            <FontAwesomeIcon
-              icon={faSheetPlastic}
-              size="4x"
-              color="blue"
-              style={{ marginBottom: "10px", marginLeft: "30px" }}
-            />
-            <div style={{ marginBottom: "10px", marginLeft: "30px" }}>
-              Generar Informe
-            </div>
-          </div>
+          {Cookies.get("tokenbodega") && (
+            <Link to="/venta">
+              <div style={{ textAlign: "center" }}>
+                <FontAwesomeIcon
+                  icon={faCartArrowDown}
+                  size="4x"
+                  color="blue"
+                  style={{ marginBottom: "10px", marginRight: "30px" }}
+                />
+                <div style={{ marginBottom: "10px", marginRight: "30px" }}>
+                  Venta de Producto
+                </div>
+              </div>
+            </Link>
+          )}
+          {Cookies.get("tokenbodega") && (
+            <Link to="/ventas">
+              <div style={{ textAlign: "center" }}>
+                <FontAwesomeIcon
+                  icon={faSheetPlastic}
+                  size="4x"
+                  color="blue"
+                  style={{ marginBottom: "10px", marginLeft: "30px" }}
+                />
+                <div style={{ marginBottom: "10px", marginLeft: "30px" }}>
+                  Informe de ventas
+                </div>
+              </div>
+            </Link>
+          )}
         </div>
       </div>
 

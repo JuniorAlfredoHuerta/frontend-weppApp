@@ -17,6 +17,9 @@ import { BodegaProvider } from "./components/context/BodegaContext";
 import { StockProvider } from "./components/context/AddContext";
 import SearchStock from "./components/Stock/SearchStock/searchstock";
 import StockPage from "./components/Stock/stockPage/stockPage";
+import { VentaProvider } from "./components/context/VentaContext";
+import CreateVentaPage from "./components/venta/crearVenta/crearVenta";
+import GetVentas from "./components/venta/Informe/getVentas";
 
 function App() {
   return (
@@ -24,15 +27,19 @@ function App() {
       <BodegaProvider>
         <BrowserRouter>
           <StockProvider>
-            <Routes>
-              <Route exact path="/" Component={Login} />
-              <Route element={<ProtectedRoute />}>
-                <Route exact path="/mainmenu" Component={MainMenu} />
-                <Route exact path="/agregar" Component={AgregarProducto} />
-                <Route exact path="/buscar" Component={SearchStock} />
-                <Route exact path="/producto/:id" Component={StockPage} />
-              </Route>
-            </Routes>
+            <VentaProvider>
+              <Routes>
+                <Route exact path="/" Component={Login} />
+                <Route element={<ProtectedRoute />}>
+                  <Route exact path="/mainmenu" Component={MainMenu} />
+                  <Route exact path="/agregar" Component={AgregarProducto} />
+                  <Route exact path="/buscar" Component={SearchStock} />
+                  <Route exact path="/producto/:id" Component={StockPage} />
+                  <Route exact path="/venta" Component={CreateVentaPage} />
+                  <Route exact path="/ventas" Component={GetVentas} />
+                </Route>
+              </Routes>
+            </VentaProvider>
           </StockProvider>
         </BrowserRouter>
       </BodegaProvider>

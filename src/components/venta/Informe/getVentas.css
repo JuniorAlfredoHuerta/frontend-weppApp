@@ -1,0 +1,216 @@
+/* AgregarProducto.css */
+.agregar-producto {
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.menu-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  position: sticky;
+  top: 0;
+  background-color: #3498db;
+  z-index: 1;
+}
+
+.menu-title {
+  margin: 0;
+}
+
+.menu-button {
+  background-color: #ffffff;
+  padding: 8px 16px;
+  border: 2px solid #030303;
+  border-radius: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.registro-inputs:focus {
+  width: calc(100% - 20px);
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 5px #3498db;
+}
+
+/* Estilos para los inputs cuando NO están enfocados */
+.registro-inputs:not(:focus) {
+  width: calc(100% - 20px);
+  /* Puedes definir aquí el estilo que deseas que se mantenga incluso cuando el input no está enfocado */
+}
+
+/* Estilos generales */
+.modal {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: white;
+  width: 60%;
+  max-width: 600px;
+  margin: 100px auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.form-css {
+  padding-top: 20px;
+  margin: 20px;
+}
+
+.audio-recorder {
+  position: sticky;
+  bottom: 0;
+  opacity: 1;
+}
+h3 {
+  display: flex;
+  align-items: center;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid black;
+  margin-bottom: 10px; /* Espacio entre la línea y otros elementos */
+  width: 100%; /* Ancho completo */
+}
+
+.contenedor {
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 65px;
+  background-color: #ffffff;
+  border-bottom: 2px solid #030303;
+  z-index: 1;
+  opacity: 1;
+}
+
+h3 {
+  flex: 1;
+}
+
+.labels-container {
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 130px; /* Ajusta este valor según la altura de .contenedor y h3 */
+  border-bottom: 2px solid #030303; /* Borde alrededor del contenedor */
+  padding: 10px; /* Agrega relleno para alejar el contenido de los bordes */
+  z-index: 1;
+  background-color: #ffffff;
+  opacity: 1;
+}
+
+.labels-container label {
+  margin: 0 10px; /* Ajusta el espacio entre las etiquetas */
+}
+.buttonji {
+  position: sticky;
+  z-index: 1;
+  bottom: 0;
+}
+
+.iconplus {
+  padding: 8px 16px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.adiciones {
+  margin-bottom: 10px;
+  z-index: 0;
+}
+
+.select-producto {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ventas-container {
+  margin: 20px;
+}
+
+.venta-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.producto-item {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+.producto-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.precio-total {
+  font-weight: bold;
+  margin-top: 10px;
+}

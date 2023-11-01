@@ -47,7 +47,7 @@ function Agregarstock() {
 
       updateStock(existioproducto._id, { ...data, cantidad: nuevaCantidad });
     } else {
-      console.log(data);
+      //console.log(data);
       createStock(data);
     }
     setProductoCreado(data);
@@ -66,9 +66,6 @@ function Agregarstock() {
 
   const handleApiResponse = (data) => {
     setApiData(data);
-    if (data.transcription && data.transcription.comando === "agregar") {
-      navigate("/agregar");
-    }
   };
 
   // Map de stocks para opciones de react-select
@@ -107,7 +104,7 @@ function Agregarstock() {
       <form onSubmit={onSubmit} className="form-css">
         <input
           type="text"
-          {...register("nombre", { required: true })}
+          {...register("nombre")}
           placeholder=" Nombre del producto"
           className="registro-inputs"
           value={
@@ -119,7 +116,7 @@ function Agregarstock() {
         ></input>
         <input
           type="text"
-          {...register("cantidad", { required: true })}
+          {...register("cantidad")}
           placeholder=" Cantidad"
           className="registro-inputs"
           value={
@@ -131,7 +128,7 @@ function Agregarstock() {
         ></input>
         <input
           type="text"
-          {...register("preciocompra", { required: true })}
+          {...register("preciocompra")}
           placeholder=" Precio de compra"
           className="registro-inputs"
           value={
@@ -143,7 +140,7 @@ function Agregarstock() {
         ></input>
         <input
           type="text"
-          {...register("precioventa", { required: true })}
+          {...register("precioventa")}
           placeholder=" Precio de venta"
           className="registro-inputs"
           onChange={handleChange}

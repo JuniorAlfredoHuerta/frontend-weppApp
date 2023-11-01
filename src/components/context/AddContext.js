@@ -25,7 +25,7 @@ export const StockProvider = ({ children }) => {
       const res = await getStocksRequest();
       setStocks(res.data);
     } catch (err) {
-      console.log(stocks);
+      console.log(err);
     }
   };
 
@@ -45,7 +45,7 @@ export const StockProvider = ({ children }) => {
   };
   const updateStock = async (id, stock) => {
     try {
-      console.log(id, stock);
+      //console.log(id, stock);
       await updateStockRequest(id, stock);
     } catch (error) {
       console.error(error);
