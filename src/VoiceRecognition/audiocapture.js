@@ -98,9 +98,9 @@ const AudioRecorder = ({ onApiResponse }) => {
           //document.body.appendChild(a);
           //a.click();
           //URL.revokeObjectURL(url);
-          mediaRecorder.current = null;
-          audioChunks.current = [];
-          setIsRecording(false);
+          //mediaRecorder.current = null;
+          //audioChunks.current = [];
+          //setIsRecording(false);
         };
       }
     } else {

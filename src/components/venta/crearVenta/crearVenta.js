@@ -28,6 +28,20 @@ function CreateVentaPage() {
 
   const handleApiResponse = (data) => {
     setApiData(data);
+    console.log(data);
+
+    // Pasar los datos de la API al componente SelectProducto
+    const product = stocksConCantidad.find(
+      (product) => product.nombre === data.transcription.nombre_producto
+    );
+    const nuevoProducto = {
+      productId: product._id,
+      nombre: data.transcription.nombre_producto,
+      cantidad: data.transcription.cantidad,
+    };
+
+    // Agregar el nuevo producto al estado appProductos
+    setAppProductos([...appProductos, nuevoProducto]);
   };
 
   const handleAddProducto = () => {
@@ -46,6 +60,8 @@ function CreateVentaPage() {
 
     // Agregar un console.log para verificar los datos actualizados
     console.log("Datos del producto actualizados:", updatedProductos);
+    if (updatedProductos) {
+    }
   };
   const handleRemoveProducto = (index) => {
     const updatedProductos = appProductos.filter((_, i) => i !== index);
@@ -77,6 +93,14 @@ function CreateVentaPage() {
     }
     createVenta(nuevoFormato);
   };
+  const isButtonDisabled = () => {
+    if (appProductos.length !== 0) {
+      if (appProductos[0].nombre) {
+        return false;
+      }
+    }
+    return true;
+  };
   return (
     <div className="menu-container">
       <nav className="menu-nav">
@@ -105,13 +129,22 @@ function CreateVentaPage() {
           <div className="select-producto" key={index}>
             <SelectProducto
               onProductoChange={(data) => handleProductoChange(data, index)}
+              apiData={apiData}
             />
             <div onClick={() => handleRemoveProducto(index)}>X</div>
           </div>
         ))}
       </div>
       <div className="buttonji">
-        <button onClick={SubmitData}> Registrar </button>
+        <button
+          onClick={SubmitData}
+          disabled={isButtonDisabled()}
+          style={{
+            backgroundColor: isButtonDisabled() ? "lightgrey" : "blue",
+          }}
+        >
+          Registrar
+        </button>
       </div>
 
       <div className="audio-recorder">

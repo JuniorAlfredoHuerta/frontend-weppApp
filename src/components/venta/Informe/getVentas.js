@@ -20,7 +20,7 @@ function GetVentas() {
     setApiData(data);
   };
   return (
-    <div className="menu-container">
+    <div>
       <nav className="menu-nav">
         <h1 className="menu-title">Ventas realizadas</h1>{" "}
         <Link to="/mainmenu">
@@ -29,27 +29,37 @@ function GetVentas() {
           </div>
         </Link>
       </nav>
-      <div className="ventas-container">
-        {ventas.map((venta, index) => (
-          <div key={index} className="venta-item">
-            <h3>{format(new Date(venta.createdAt), "dd/MM/yyyy - HH:mm")}</h3>
-            <ul>
-              {venta.productos.map((producto, pIndex) => (
-                <div className="producto-content">
-                  <p>Producto: {producto.nombre}</p>
-                  <p>Cantidad: {producto.cantidad}</p>
-                  <p>Total: {producto.cantidad * producto.precioVenta}</p>
-                </div>
-              ))}
-            </ul>
-            <p className="precio-total">
-              Precio Total de la Venta: {venta.preciototal}
-            </p>
-          </div>
-        ))}
-      </div>
-      <div className="audio-recorder">
-        <AudioRecorder onApiResponse={handleApiResponse} />
+      <div style={{ marginBottom: "100px" }}>
+        <div className="ventas-container">
+          {ventas.map((venta, index) => (
+            <div key={index} className="venta-item">
+              <h3>{format(new Date(venta.createdAt), "dd/MM/yyyy - HH:mm")}</h3>
+              <ul>
+                {venta.productos.map((producto, pIndex) => (
+                  <div className="producto-content" key={pIndex}>
+                    <div className="producto-info">
+                      <div className="producto-detail">
+                        <div>Producto: {producto.nombre}</div>
+                      </div>
+                      <div className="producto-detail">
+                        <p>Cantidad: {producto.cantidad}</p>
+                      </div>
+                      <div className="producto-detail">
+                        <p>Total: {producto.cantidad * producto.precioVenta}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </ul>
+              <p className="precio-total">
+                Precio Total de la Venta: {venta.preciototal}
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className="audio-recorder">
+          <AudioRecorder onApiResponse={handleApiResponse} />
+        </div>
       </div>
     </div>
   );

@@ -42,7 +42,7 @@ function SearchStock() {
         </Link>
       </nav>
       <div>
-        <h1>Lista de Productos</h1>
+        <h1 style={{ marginLeft: "10px" }}>Lista de Productos</h1>
         <div className="product-container">
           {stocks.map((product, index) => (
             <Link

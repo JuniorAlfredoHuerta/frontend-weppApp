@@ -145,3 +145,28 @@ button:hover {
   text-align: left;
   margin-bottom: 10px;
 }
+
+.success-message {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #5cb85c;
+  color: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.success-message .close {
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.success-message p {
+  margin: 0;
+  padding-right: 20px;
+}

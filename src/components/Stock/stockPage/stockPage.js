@@ -14,6 +14,7 @@ function StockPage() {
   const { stocks, getStock, updateStock } = useStock();
   const [apiData, setApiData] = useState(null);
   const [producto, setProducto] = useState({});
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,6 +37,11 @@ function StockPage() {
   //}
   const onSubmit = handleSubmit(async (data) => {
     await updateStock(id, data);
+    setShowSuccessMessage(true);
+
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+    }, 3000);
   });
   const handleApiResponse = (data) => {
     setApiData(data);
@@ -56,6 +62,10 @@ function StockPage() {
     });
   };
 
+  const closeMessage = () => {
+    setShowSuccessMessage(false);
+  };
+
   return (
     <div className="menu-container">
       <nav className="menu-nav">
@@ -67,6 +77,7 @@ function StockPage() {
         </Link>
       </nav>
       <form onSubmit={onSubmit} className="form-css">
+        <h3> Actualiza los datos del producto</h3>
         <label>Nombre del producto</label>
         <input
           type="text"
@@ -112,6 +123,14 @@ function StockPage() {
         ></input>
         <button type="submit">Actualizar</button>
       </form>
+      {showSuccessMessage && (
+        <div className="success-message">
+          <span className="close" onClick={closeMessage}>
+            &times;
+          </span>
+          <p>El producto fue correctamente actualizado.</p>
+        </div>
+      )}
 
       <div className="audio-recorder">
         <AudioRecorder onApiResponse={handleApiResponse} />

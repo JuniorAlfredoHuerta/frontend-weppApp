@@ -130,6 +130,7 @@ button:hover {
 }
 .product-container {
   display: flex;
+  margin: auto;
   flex-wrap: wrap;
   justify-content: space-between;
 }
@@ -137,6 +138,8 @@ button:hover {
   width: calc(50% - 10px); /* Ancho del 50% con espacio entre los elementos */
   padding: 10px;
   box-sizing: border-box;
+  margin: auto;
+
   margin-bottom: 20px; /* Espacio entre las filas */
   border: 1px solid #ccc;
 }

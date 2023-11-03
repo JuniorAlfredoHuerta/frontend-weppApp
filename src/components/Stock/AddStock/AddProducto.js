@@ -68,10 +68,18 @@ function Agregarstock() {
     setApiData(data);
   };
 
-  // Map de stocks para opciones de react-select
+  const isFormFilled = () => {
+    return (
+      producto.nombre &&
+      producto.cantidad &&
+      producto.preciocompra &&
+      producto.precioventa
+    );
+  };
 
   useEffect(() => {
     if (apiData && apiData.transcription) {
+      console.log(apiData);
       const newProducto = {
         nombre: apiData.transcription.nombre_producto || producto.nombre,
         cantidad: apiData.transcription.cantidad || producto.cantidad,
@@ -102,6 +110,7 @@ function Agregarstock() {
         </Link>
       </nav>
       <form onSubmit={onSubmit} className="form-css">
+        <label>Nombre del producto</label>
         <input
           type="text"
           {...register("nombre")}
@@ -114,6 +123,8 @@ function Agregarstock() {
           }
           onChange={handleChange}
         ></input>
+        <label>Cantidad a ingresar</label>
+
         <input
           type="text"
           {...register("cantidad")}
@@ -126,6 +137,8 @@ function Agregarstock() {
           }
           onChange={handleChange}
         ></input>
+        <label>Precio de compra</label>
+
         <input
           type="text"
           {...register("preciocompra")}
@@ -138,6 +151,8 @@ function Agregarstock() {
           }
           onChange={handleChange}
         ></input>
+        <label>Precio de Venta</label>
+
         <input
           type="text"
           {...register("precioventa")}
@@ -146,7 +161,13 @@ function Agregarstock() {
           onChange={handleChange}
         ></input>
 
-        <button type="submit">Registrar Producto</button>
+        <button
+          type="submit"
+          disabled={!isFormFilled()}
+          style={{ backgroundColor: !isFormFilled() ? "lightgrey" : "blue" }}
+        >
+          Registrar Producto
+        </button>
       </form>
       {showSuccessMessage && (
         <div className="modal">
@@ -154,7 +175,6 @@ function Agregarstock() {
             <span className="close" onClick={closeMessage}>
               &times;
             </span>
-            <p>Producto creado: </p>
             <p>Nombre: {productoCreado.nombre}</p>
             <p>Cantidad: {productoCreado.cantidad}</p>
             <p>Precio de compra: $ {productoCreado.preciocompra}</p>
