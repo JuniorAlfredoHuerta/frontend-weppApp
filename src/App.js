@@ -20,6 +20,8 @@ import StockPage from "./components/Stock/stockPage/stockPage";
 import { VentaProvider } from "./components/context/VentaContext";
 import CreateVentaPage from "./components/venta/crearVenta/crearVenta";
 import GetVentas from "./components/venta/Informe/getVentas";
+import Register from "./components/register/register";
+import EditPage from "./components/Bodega/editbodega/editbodega";
 
 function App() {
   return (
@@ -30,7 +32,9 @@ function App() {
             <VentaProvider>
               <Routes>
                 <Route exact path="/" Component={Login} />
+                <Route exact path="/register" Component={Register} />
                 <Route element={<ProtectedRoute />}>
+                  <Route exact path="/editBodega" Component={EditPage} />
                   <Route exact path="/mainmenu" Component={MainMenu} />
                   <Route exact path="/agregar" Component={AgregarProducto} />
                   <Route exact path="/buscar" Component={SearchStock} />

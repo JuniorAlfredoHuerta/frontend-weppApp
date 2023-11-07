@@ -14,13 +14,18 @@ import AddBodegaPage from "./Bodega/addbodega.js";
 import { useBodega } from "./context/BodegaContext.js";
 import { useAuth } from "./context/AuthContext.js";
 import Cookies from "js-cookie";
+import { useStock } from "./context/AddContext.js";
 
 function MainMenu() {
   const [apiData, setApiData] = useState(null);
   const [modal, setModal] = useState(false);
   const navigate = useNavigate();
   const { getBodegas, bodegas, gettokenbodega, calltokenbodega } = useBodega();
+  const { getStocks, stocks } = useStock();
 
+  useEffect(() => {
+    getStocks();
+  }, []);
   useEffect(() => {
     getBodegas();
   }, [bodegas]);
@@ -28,14 +33,33 @@ function MainMenu() {
   const handleApiResponse = (data) => {
     setApiData(data);
     if (Cookies.get("tokenbodega")) {
-      if (data.transcription && data.transcription.comando === "agregar") {
-        navigate("/agregar");
-      }
-      if (data.transcription && data.transcription.comando === "buscar") {
-        navigate("/buscar");
-      }
-      if (data.transcription && data.transcription.comando === "vender") {
-        navigate("/venta");
+      const { transcription } = data;
+      if (transcription) {
+        switch (transcription.comando) {
+          case "agregar":
+            navigate("/agregar");
+            break;
+          case "buscar":
+            navigate("/buscar");
+            break;
+          case "vender":
+            navigate("/venta");
+            break;
+          case "ventas":
+            navigate("/ventas");
+            break;
+          case "producto":
+            const foundProduct = stocks.find(
+              (product) => product.nombre === data.transcription.nombre_producto
+            );
+            if (foundProduct) {
+              const idproducto = foundProduct._id;
+              navigate(`/producto/${idproducto}`);
+            }
+          default:
+            console.log("Comando no reconocido");
+            break;
+        }
       }
     } else {
       console.log("ELIJA BODEGA");
@@ -161,6 +185,9 @@ function MainMenu() {
         <button className="button_add" onClick={openModal}>
           <FontAwesomeIcon className="icon" icon={faAdd} />
         </button>
+        <Link to="/editBodega">
+          <FontAwesomeIcon icon={faSheetPlastic} />
+        </Link>
       </div>
 
       <div className="icon-container">

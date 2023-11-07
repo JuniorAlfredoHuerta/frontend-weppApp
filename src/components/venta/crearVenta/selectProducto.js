@@ -115,14 +115,24 @@ function SelectProducto({ onProductoChange, apiData }) {
         type="text"
         placeholder="Cantidad"
         style={{ marginRight: "10px" }}
-        value={cantidad || apiData.transcription.cantidad}
+        value={
+          cantidad ||
+          (apiData &&
+            apiData.transcription &&
+            apiData.transcription.cantidad) ||
+          ""
+        }
         onChange={(e) => setCantidad(e.target.value)}
       />
       <input
         type="text"
         placeholder="Precio"
         style={{ marginRight: "10px" }}
-        value={precioVenta || apiData.transcription.precio}
+        value={
+          precioVenta ||
+          (apiData && apiData.transcription && apiData.transcription.precio) ||
+          ""
+        }
         onChange={(e) => setPrecioVenta(e.target.value)}
       />
       <input type="text" placeholder="Total" readOnly value={total} />

@@ -43,6 +43,7 @@ function StockPage() {
       setShowSuccessMessage(false);
     }, 3000);
   });
+  
   const handleApiResponse = (data) => {
     setApiData(data);
     if (data && data.transcription && data.transcription.cantidad) {
