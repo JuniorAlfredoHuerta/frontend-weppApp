@@ -15,8 +15,8 @@ import { useVenta } from "../../context/VentaContext";
 function CreateVentaPage() {
   const [apiData, setApiData] = useState(null);
   const [appProductos, setAppProductos] = useState([]);
-  const [stockeado, setStockeado] = useState([]);
   const { createVenta } = useVenta();
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const { stocks, getStocks, updateStock } = useStock();
 
@@ -30,7 +30,6 @@ function CreateVentaPage() {
     setApiData(data);
     console.log(data);
 
-    // Pasar los datos de la API al componente SelectProducto
     const product = stocksConCantidad.find(
       (product) => product.nombre === data.transcription.nombre_producto
     );
@@ -40,7 +39,6 @@ function CreateVentaPage() {
       cantidad: data.transcription.cantidad,
     };
 
-    // Agregar el nuevo producto al estado appProductos
     setAppProductos([...appProductos, nuevoProducto]);
   };
 
@@ -51,6 +49,9 @@ function CreateVentaPage() {
         { productId: null, cantidad: "", precioVenta: "", total: "" },
       ]);
     }
+  };
+  const closeMessage = () => {
+    setShowSuccessMessage(false);
   };
 
   const handleProductoChange = (producto, index) => {
@@ -92,7 +93,11 @@ function CreateVentaPage() {
       updateStock(stocktotupdate[i]._id, { cantidad: stockleft });
     }
     createVenta(nuevoFormato);
+    setShowSuccessMessage(true);
+    setAppProductos([]);
+    setApiData(null);
   };
+
   const isButtonDisabled = () => {
     if (appProductos.length !== 0) {
       if (appProductos[0].nombre) {
@@ -135,6 +140,16 @@ function CreateVentaPage() {
           </div>
         ))}
       </div>
+      {showSuccessMessage && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeMessage}>
+              &times;
+            </span>
+            <p> La venta ha sido creada exitosamente</p>
+          </div>
+        </div>
+      )}
       <div className="buttonji">
         <button
           onClick={SubmitData}

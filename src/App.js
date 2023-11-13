@@ -22,6 +22,7 @@ import CreateVentaPage from "./components/venta/crearVenta/crearVenta";
 import GetVentas from "./components/venta/Informe/getVentas";
 import Register from "./components/register/register";
 import EditPage from "./components/Bodega/editbodega/editbodega";
+import Edituser from "./components/User/edituser";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
                 <Route exact path="/" Component={Login} />
                 <Route exact path="/register" Component={Register} />
                 <Route element={<ProtectedRoute />}>
+                  <Route exact path="/user" Component={Edituser} />
                   <Route exact path="/editBodega" Component={EditPage} />
                   <Route exact path="/mainmenu" Component={MainMenu} />
                   <Route exact path="/agregar" Component={AgregarProducto} />

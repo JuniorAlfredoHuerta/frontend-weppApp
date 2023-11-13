@@ -1,7 +1,11 @@
 import React, { useRef, useState } from "react";
 import toWav from "audiobuffer-to-wav";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faMicrophone } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHome,
+  faMicrophone,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import "./audiocapture.css";
 import { Link } from "react-router-dom";
 
@@ -163,6 +167,11 @@ const AudioRecorder = ({ onApiResponse }) => {
       <Link to="/mainmenu">
         <button className="home-button">
           <FontAwesomeIcon icon={faHome} />
+        </button>
+      </Link>
+      <Link to="/user">
+        <button className="user-button">
+          <FontAwesomeIcon icon={faUser} />
         </button>
       </Link>
     </div>

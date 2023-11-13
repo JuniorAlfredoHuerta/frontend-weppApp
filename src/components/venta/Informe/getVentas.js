@@ -24,6 +24,9 @@ function GetVentas() {
 
   const handleApiResponse = (data) => {
     setApiData(data);
+    if (data.transcription.comando === "descargar") {
+      generatePDF();
+    }
   };
 
   const filterSalesByDate = () => {

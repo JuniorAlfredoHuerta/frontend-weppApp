@@ -16,9 +16,14 @@ function Agregarstock() {
     preciocompra: "",
     precioventa: "",
   });
+  const [previacan, setPreviacan] = useState("");
+  const [nuevacan, setNuevacan] = useState("");
+
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showSuccessMessageE, setShowSuccessMessageE] = useState(false);
 
   const closeMessage = () => {
+    setShowSuccessMessageE(false);
     setShowSuccessMessage(false);
   };
   const [apiData, setApiData] = useState(null);
@@ -41,17 +46,19 @@ function Agregarstock() {
     if (existioproducto) {
       //aqui tendria que sumar existioproducto.cantidad con data.cantidad y remplazarla en data
       const cantidadExistente = existioproducto.cantidad || 0;
+      setPreviacan(cantidadExistente);
       const cantidadNueva = data.cantidad || 0;
       const nuevaCantidad =
         parseInt(cantidadExistente) + parseInt(cantidadNueva);
-
+      setNuevacan(nuevaCantidad);
       updateStock(existioproducto._id, { ...data, cantidad: nuevaCantidad });
+      setShowSuccessMessageE(true);
     } else {
       //console.log(data);
       createStock(data);
+      setShowSuccessMessage(true);
     }
     setProductoCreado(data);
-    setShowSuccessMessage(true);
     reset();
     clearFormFields();
   });
@@ -179,7 +186,20 @@ function Agregarstock() {
             <p>Cantidad: {productoCreado.cantidad}</p>
             <p>Precio de compra: $ {productoCreado.preciocompra}</p>
             <p>Precio de venta: $ {productoCreado.precioventa}</p>
-            {/* Agrega otros detalles del producto aquí según sea necesario */}
+          </div>
+        </div>
+      )}
+      {showSuccessMessageE && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeMessage}>
+              &times;
+            </span>
+            <p>Nombre: {productoCreado.nombre}</p>
+            <p>Cantidad Previa: {previacan}</p>
+            <p>Cantidad Nueva: {nuevacan}</p>
+            <p>Precio de compra: $ {productoCreado.preciocompra}</p>
+            <p>Precio de venta: $ {productoCreado.precioventa}</p>
           </div>
         </div>
       )}

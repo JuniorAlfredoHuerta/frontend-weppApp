@@ -6,3 +6,6 @@ export const registerRequest = async (user) =>
 export const loginRequest = async (user) => axios.post(`/auth/login`, user);
 
 export const verifyTokenRequest = () => axios.get(`/auth/verify`);
+
+export const editUserRequest = async (id, user) =>
+  axios.put(`/users/${id}`, user);

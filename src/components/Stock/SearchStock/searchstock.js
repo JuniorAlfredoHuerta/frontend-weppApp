@@ -35,6 +35,9 @@ function SearchStock() {
       const idproducto = foundProduct._id;
       navigate(`/producto/${idproducto}`);
     }
+    if (data.transcription.comando === "descargar") {
+      generatePDF();
+    }
   };
 
   const generatePDF = async () => {

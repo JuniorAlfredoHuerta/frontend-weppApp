@@ -45,6 +45,9 @@ function MainMenu() {
           case "vender":
             navigate("/venta");
             break;
+          case "vendi":
+            navigate("/venta");
+            break;
           case "ventas":
             navigate("/ventas");
             break;
