@@ -156,8 +156,6 @@ const AudioRecorder = ({ onApiResponse }) => {
 
   return (
     <div className="container-with-blue-background">
-      {isRecording && <div className="recording-message">Grabando...</div>}
-
       <button
         className={`microphone-button ${isRecording ? "recording" : ""}`}
         onClick={toggleRecording}

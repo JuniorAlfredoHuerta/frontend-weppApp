@@ -34,7 +34,7 @@ function CreateVentaPage() {
       (product) => product.nombre === data.transcription.nombre_producto
     );
     const nuevoProducto = {
-      productId: product._id,
+      _id: product._id,
       nombre: data.transcription.nombre_producto,
       cantidad: data.transcription.cantidad,
     };
@@ -46,7 +46,7 @@ function CreateVentaPage() {
     if (appProductos.length < stocksConCantidad.length) {
       setAppProductos([
         ...appProductos,
-        { productId: null, cantidad: "", precioVenta: "", total: "" },
+        { _id: null, cantidad: "", precioVenta: "", total: "" },
       ]);
     }
   };
@@ -84,12 +84,16 @@ function CreateVentaPage() {
     const stocktotupdate = appProductos.map(
       ({ nombre, precioVenta, total, ...rest }) => rest
     );
+    console.log(stocktotupdate);
     for (let i = 0; i < stocktotupdate.length; i++) {
       const stocktest = stocksConCantidad.find(
         (stocktest) => stocktest._id === stocktotupdate[i]._id
       );
+
+      console.log(stocktest);
       const stockleft =
-        parseInt(stocktest.cantidad) - parseInt(stocktotupdate[i].cantidad);
+        parseInt(stocksConCantidad.cantidad) -
+        parseInt(stocktotupdate[i].cantidad);
       updateStock(stocktotupdate[i]._id, { cantidad: stockleft });
     }
     createVenta(nuevoFormato);
