@@ -28,6 +28,7 @@ function App() {
   return (
     <AuthProvider>
       <BodegaProvider>
+
         <BrowserRouter>
           <StockProvider>
             <VentaProvider>

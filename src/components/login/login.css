@@ -21,3 +21,9 @@
   background-color: #fff;
   margin: 20px auto; /* Utiliza márgenes automáticos */
 }
+
+.audio-recorder {
+  position: fixed;
+  bottom: 0;
+  opacity: 1;
+}

@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import LoginForm from "./loginform";
 import "./login.css";
-import Registerform from "../register/registerform";
+import AudioRecorder from "../../VoiceRecognition/audiocapture.js";
 
 function Login() {
+  const [apiData, setApiData] = useState(null);
+
+  const handleApiResponse = (data) => {
+    const { transcription } = data;
+
+    setApiData(data);
+    if (transcription) {
+      console.log(transcription);
+    } else {
+      console.log("ELIJA BODEGA");
+    }
+  };
   return (
     <div className="menu-container">
       <nav className="main-menu">
@@ -19,6 +31,9 @@ function Login() {
         <Link to="/register">
           <button>Registro</button>
         </Link>
+      </div>
+      <div className="audio-recorder">
+        <AudioRecorder onApiResponse={handleApiResponse} />
       </div>
     </div>
   );
