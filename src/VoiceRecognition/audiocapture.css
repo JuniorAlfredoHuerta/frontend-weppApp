@@ -35,12 +35,25 @@
 }
 
 .microphone-button {
-  /* Estilos existentes */
+  width: 80px; /* Tamaño en píxeles */
+  height: 50px; /* Tamaño en píxeles */
+  background-color: #3498db;
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  padding: 8px 16px; /* Reducir el padding para hacerlo más pequeño */
+  transform: translateX(-50%);
+  color: #fff;
+  border: 2px solid #3498db; /* Reducir el ancho del borde */
+  border-radius: 10px; /* Reducir el radio de los bordes para hacerlo menos circular */
+  font-size: 20px; /* Reducir el tamaño de la fuente del icono */
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  z-index: 999;
   transition: background-color 0.2s, color 0.2s, transform 0.2s;
  }
  
  .microphone-button.recording {
-  animation: pulse 1s infinite;
   background-color: #ff0000; /* Cambia el color de fondo a rojo para indicar grabación */
  }
  
