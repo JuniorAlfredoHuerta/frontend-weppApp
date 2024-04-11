@@ -18,44 +18,33 @@ const AudioRecorder = ({ onApiResponse }) => {
     })();
  }, []); // Dependencia vacía para que se ejecute solo una vez
 
- const startRecording = async () => {
-    if (!isRecording) {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/wav' });
-      mediaRecorder.current.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunks.current.push(event.data);
-        }
-      };
-      mediaRecorder.current.start();
-      setIsRecording(true);
-    }
- };
+ const toggleRecording = async () => {
+  if (!isRecording) {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/wav' });
+    mediaRecorder.current.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        audioChunks.current.push(event.data);
+      }
+    };
+    mediaRecorder.current.start();
+    setIsRecording(true);
+  } else {
+    mediaRecorder.current.stop();
+    mediaRecorder.current.onstop = async () => {
+      const blob = new Blob(audioChunks.current, { type: "audio/wav" });
+      try {
+        await sendAudioToAPI(blob, "recorded-audio.wav");
+      } catch (error) {
+        console.error(error);
+      }
+      mediaRecorder.current = null;
+      audioChunks.current = [];
+      setIsRecording(false);
+    };
+  }
+};
 
- const stopRecording = () => {
-    if (isRecording) {
-      mediaRecorder.current.stop();
-      mediaRecorder.current.onstop = async () => {
-        const blob = new Blob(audioChunks.current, { type: "audio/wav" });
-        try {
-          await sendAudioToAPI(blob, "recorded-audio.wav");
-        } catch (error) {
-          console.error(error);
-        }
-        mediaRecorder.current = null;
-        audioChunks.current = [];
-        setIsRecording(false);
-      };
-    }
- };
-
- const handleMouseDown = () => {
-    startRecording();
- };
-
- const handleMouseUp = () => {
-    stopRecording();
- };
 
  const sendAudioToAPI = async (audioBlob, fileName) => {
     const formData = new FormData();
@@ -72,7 +61,7 @@ const AudioRecorder = ({ onApiResponse }) => {
       }
 
       const data = await response.json();
-      console.log(data);
+      //console.log(data);
       onApiResponse(data);
     } catch (error) {
       console.error(error);
@@ -80,26 +69,24 @@ const AudioRecorder = ({ onApiResponse }) => {
  };
 
  return (
-    <div className="container-with-blue-background">
-      <button
-        className={`microphone-button ${isRecording ? "recording" : ""}`}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-      >
-        <FontAwesomeIcon icon={faMicrophone} />
+  <div className="container-with-blue-background">
+    <button
+      className={`microphone-button ${isRecording ? "recording" : ""}`}
+      onClick={toggleRecording}
+    >
+      <FontAwesomeIcon icon={faMicrophone} />
+    </button>
+    <Link to="/mainmenu">
+      <button className="home-button">
+        <FontAwesomeIcon icon={faHome} />
       </button>
-      <Link to="/mainmenu">
-        <button className="home-button">
-          <FontAwesomeIcon icon={faHome} />
-        </button>
-      </Link>
-      <Link to="/user">
-        <button className="user-button">
-          <FontAwesomeIcon icon={faUser} />
-        </button>
-      </Link>
-    </div>
- );
+    </Link>
+    <Link to="/user">
+      <button className="user-button">
+        <FontAwesomeIcon icon={faUser} />
+      </button>
+    </Link>
+  </div>
+);
 };
-
 export default AudioRecorder;
