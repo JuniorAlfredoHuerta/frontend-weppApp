@@ -90,8 +90,9 @@ function Agregarstock() {
       const newProducto = {
         nombre: apiData.transcription.nombre_producto || producto.nombre,
         cantidad: apiData.transcription.cantidad || producto.cantidad,
-        preciocompra: apiData.transcription.precio || producto.preciocompra,
-        precioventa: producto.precioventa,
+        preciocompra: apiData.transcription.precio ||   producto.preciocompra,
+        precioventa: apiData.transcription.precio * 1.20   ||  producto.precioventa ,
+
       };
 
       setProducto(newProducto);
