@@ -15,7 +15,14 @@ function StockPage() {
   const [apiData, setApiData] = useState(null);
   const [producto, setProducto] = useState({});
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [info, setinfo] = useState(false);
+  const openInfo = () => {
+    setinfo(true);
+  };
 
+  const closeInfo = () => {
+    setinfo(false);
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -43,7 +50,7 @@ function StockPage() {
       setShowSuccessMessage(false);
     }, 3000);
   });
-  
+
   const handleApiResponse = (data) => {
     setApiData(data);
     if (data && data.transcription && data.transcription.cantidad) {
@@ -71,12 +78,30 @@ function StockPage() {
     <div className="menu-container">
       <nav className="menu-nav">
         <h1 className="menu-title">Buscar Producto</h1>{" "}
+        <div className="button-help" onClick={openInfo}>
+          AYUDA
+        </div>
         <Link to="/buscar">
           <div className="menu-button">
             <FontAwesomeIcon icon={faArrowLeft} />
           </div>
         </Link>
       </nav>
+      {info && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeInfo}>
+              &times;
+            </span>{" "}
+            <div className="texto-grande">
+              Los comandos de voz para esta pagina son:
+            </div>
+            <div className="texto-grande">Añadir "Cantidad"</div>
+            <div>Añade la cantidad dicha al stock</div>
+            <div>Para salidas del producto vaya a Registro de Ventas</div>
+          </div>
+        </div>
+      )}
       <form onSubmit={onSubmit} className="form-css">
         <h3> Actualiza los datos del producto</h3>
         <label>Nombre del producto</label>

@@ -1,27 +1,45 @@
 import React, { useRef, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faMicrophone, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHome,
+  faMicrophone,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import "./audiocapture.css";
 import { Link } from "react-router-dom";
-import { MediaRecorder, register } from 'extendable-media-recorder';
-import { connect } from 'extendable-media-recorder-wav-encoder';
+import { MediaRecorder, register } from "extendable-media-recorder";
+import { connect } from "extendable-media-recorder-wav-encoder";
 
 const AudioRecorder = ({ onApiResponse }) => {
- const mediaRecorder = useRef(null);
- const audioChunks = useRef([]);
- const [isRecording, setIsRecording] = useState(false);
+  const mediaRecorder = useRef(null);
+  const audioChunks = useRef([]);
+  const [isRecording, setIsRecording] = useState(false);
+  const [encoderRegistered, setEncoderRegistered] = useState(false);
 
- useEffect(() => {
-    // Asegúrate de que register se llame solo una vez
-    (async () => {
-      await register(await connect());
-    })();
- }, []); // Dependencia vacía para que se ejecute solo una vez
+  useEffect(() => {
+    const initializeEncoder = async () => {
+      if (!encoderRegistered) {
+        try {
+          const encoder = await connect();
+          await register(encoder);
+          setEncoderRegistered(true);
+        } catch (error) {}
+      }
+    };
 
- const startRecording = async () => {
+    initializeEncoder();
+
+    return () => {
+      // Lógica de limpieza si es necesario
+    };
+  }, [encoderRegistered]);
+
+  const startRecording = async () => {
     if (!isRecording) {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/wav' });
+      mediaRecorder.current = new MediaRecorder(stream, {
+        mimeType: "audio/wav",
+      });
       mediaRecorder.current.ondataavailable = (event) => {
         if (event.data.size > 0) {
           audioChunks.current.push(event.data);
@@ -30,9 +48,9 @@ const AudioRecorder = ({ onApiResponse }) => {
       mediaRecorder.current.start();
       setIsRecording(true);
     }
- };
+  };
 
- const stopRecording = () => {
+  const stopRecording = () => {
     if (isRecording) {
       mediaRecorder.current.stop();
       mediaRecorder.current.onstop = async () => {
@@ -47,17 +65,17 @@ const AudioRecorder = ({ onApiResponse }) => {
         setIsRecording(false);
       };
     }
- };
+  };
 
- const handleMouseDown = () => {
+  const handleMouseDown = () => {
     startRecording();
- };
+  };
 
- const handleMouseUp = () => {
+  const handleMouseUp = () => {
     stopRecording();
- };
+  };
 
- const sendAudioToAPI = async (audioBlob, fileName) => {
+  const sendAudioToAPI = async (audioBlob, fileName) => {
     const formData = new FormData();
     formData.append("audio", audioBlob, fileName);
 
@@ -77,9 +95,9 @@ const AudioRecorder = ({ onApiResponse }) => {
     } catch (error) {
       console.error(error);
     }
- };
+  };
 
- return (
+  return (
     <div className="container-with-blue-background">
       <button
         className={`microphone-button ${isRecording ? "recording" : ""}`}
@@ -99,7 +117,7 @@ const AudioRecorder = ({ onApiResponse }) => {
         </button>
       </Link>
     </div>
- );
+  );
 };
 
 export default AudioRecorder;

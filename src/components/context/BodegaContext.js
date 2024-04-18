@@ -21,6 +21,7 @@ export const useBodega = () => {
 export const BodegaProvider = ({ children }) => {
   const [bodegas, setBodegas] = useState([]);
   const [bodega, setBodega] = useState(null);
+  const [errors, setErros] = useState([]);
 
   const getBodegas = async () => {
     try {
@@ -62,10 +63,15 @@ export const BodegaProvider = ({ children }) => {
   };
 
   const createBodega = async (bodega) => {
-    console.log(bodega);
-    const res = await createBodegaRequest(bodega);
-    console.log(res);
+    try {
+      console.log(bodega);
+      const res = await createBodegaRequest(bodega);
+    } catch (error) {
+      console.error(error);
+      setErros(error.response.data);
+    }
   };
+
   return (
     <bodegaContext.Provider
       value={{
@@ -75,6 +81,7 @@ export const BodegaProvider = ({ children }) => {
         gettokenbodega,
         calltokenbodega,
         updateBodega,
+        errors,
       }}
     >
       {children}

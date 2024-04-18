@@ -6,175 +6,193 @@ import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AudioRecorder from "../../../VoiceRecognition/audiocapture";
 import { useEffect, useState } from "react";
-import Select from "react-select";
 
 function Agregarstock() {
-  const { register, handleSubmit, reset } = useForm();
-  const [producto, setProducto] = useState({
-    nombre: "",
-    cantidad: "",
-    preciocompra: "",
-    precioventa: "",
-  });
-  const [previacan, setPreviacan] = useState("");
-  const [nuevacan, setNuevacan] = useState("");
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+  const { createStock, stocks, getStocks, updateStock } = useStock();
 
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showSuccessMessageE, setShowSuccessMessageE] = useState(false);
+  const [productoCreado, setProductoCreado] = useState(null);
 
-  const closeMessage = () => {
-    setShowSuccessMessageE(false);
-    setShowSuccessMessage(false);
-  };
+  const [previacan, setPreviacan] = useState("");
+  const [nuevacan, setNuevacan] = useState("");
+
   const [apiData, setApiData] = useState(null);
-  const { createStock, stocks, getStocks, updateStock } = useStock();
-  const [productoCreado, setProductoCreado] = useState(null); // Estado para almacenar el producto creado
+  const [formErrors, setFormErrors] = useState({});
+
+  const [info, setinfo] = useState(false);
+  const openInfo = () => {
+    setinfo(true);
+  };
+
+  const closeInfo = () => {
+    setinfo(false);
+  };
 
   useEffect(() => {
     getStocks();
   }, [stocks]);
 
-  const navigate = useNavigate();
-
+  const closeMessage = () => {
+    setShowSuccessMessageE(false);
+    setShowSuccessMessage(false);
+  };
   const onSubmit = handleSubmit(async (data) => {
-    //console.log(data);
-    //console.log(stocks);
+    const { cantidad, preciocompra, precioventa } = data;
+
     const existioproducto = stocks.find(
       (stock) => stock.nombre === data.nombre
     );
+    if (
+      !isValidInteger(cantidad) ||
+      !isValidNumber(preciocompra) ||
+      !isValidNumber(precioventa)
+    ) {
+      setFormErrors({
+        cantidad: isValidInteger(cantidad) ? "" : "Debe ser un número válido.",
+        preciocompra: isValidNumber(preciocompra)
+          ? ""
+          : "Debe ser un número válido.",
+        precioventa: isValidNumber(precioventa)
+          ? ""
+          : "Debe ser un número válido.",
+      });
+      return;
+    }
 
     if (existioproducto) {
-      //aqui tendria que sumar existioproducto.cantidad con data.cantidad y remplazarla en data
       const cantidadExistente = existioproducto.cantidad || 0;
       setPreviacan(cantidadExistente);
-      const cantidadNueva = data.cantidad || 0;
-      const nuevaCantidad =
-        parseInt(cantidadExistente) + parseInt(cantidadNueva);
-      setNuevacan(nuevaCantidad);
-      updateStock(existioproducto._id, { ...data, cantidad: nuevaCantidad });
+
+      const cantidadNueva =
+        parseInt(cantidadExistente) + parseInt(data.cantidad);
+      setNuevacan(cantidadNueva);
+
+      updateStock(existioproducto._id, { ...data, cantidad: cantidadNueva });
       setShowSuccessMessageE(true);
     } else {
-      //console.log(data);
       createStock(data);
       setShowSuccessMessage(true);
     }
     setProductoCreado(data);
-    reset();
-    clearFormFields();
+    setApiData(null);
+
+    resetForm();
   });
-  const clearFormFields = () => {
-    setProducto({
+
+  const isValidInteger = (value) => {
+    return !isNaN(value) && Number.isInteger(Number(value));
+  };
+
+  const isValidNumber = (value) => {
+    return !isNaN(value) && isFinite(value);
+  };
+
+  useEffect(() => {
+    if (apiData && apiData.transcription) {
+      const newProducto = {
+        nombre: apiData.transcription.nombre_producto || "",
+        cantidad: apiData.transcription.cantidad || "",
+        preciocompra: apiData.transcription.precio || "",
+        precioventa: apiData.transcription.precio * 1.2 || "",
+      };
+      reset(newProducto);
+    }
+  }, [apiData, reset]);
+
+  const resetForm = () => {
+    reset({
       nombre: "",
       cantidad: "",
       preciocompra: "",
       precioventa: "",
     });
-  };
-
-  const handleApiResponse = (data) => {
-    setApiData(data);
-  };
-
-  const isFormFilled = () => {
-    return (
-      producto.nombre &&
-      producto.cantidad &&
-      producto.preciocompra &&
-      producto.precioventa
-    );
-  };
-
-  useEffect(() => {
-    if (apiData && apiData.transcription) {
-      console.log(apiData);
-      const newProducto = {
-        nombre: apiData.transcription.nombre_producto || producto.nombre,
-        cantidad: apiData.transcription.cantidad || producto.cantidad,
-        preciocompra: apiData.transcription.precio || producto.preciocompra,
-        precioventa: producto.precioventa,
-      };
-
-      setProducto(newProducto);
-      reset(newProducto);
-    }
-  }, [apiData, reset]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProducto({
-      ...producto,
-      [name]: value,
-    });
+    setFormErrors({});
   };
   return (
     <div className="menu-container">
       <nav className="menu-nav">
         <h1 className="menu-title">Agregar Producto</h1>{" "}
+        <div className="button-help" onClick={openInfo}>
+          AYUDA
+        </div>
         <Link to="/mainmenu">
           <div className="menu-button">
             <FontAwesomeIcon icon={faArrowLeft} />
           </div>
         </Link>
       </nav>
+      {info && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeInfo}>
+              &times;
+            </span>{" "}
+            <div className="texto-grande">
+              Los comandos de voz para esta pagina son:
+            </div>
+            <div>
+              Para agregar un producto en esta pagina necesitaras decir el
+              comando de la siguiente forma
+            </div>
+            <div className="texto-grande">Compre + </div>
+            <div className="texto-grande">"Cantidad numerica " + </div>
+            <div className="texto-grande">"Nombre del producto" + </div>
+            <div className="texto-grande">Costo + </div>
+            <div className="texto-grande">"Precio invidiual del producto" </div>
+            <div className="texto-grande">Ejemplo: </div>
+            <div>Compre cinco Inka Kola costo dos soles cincuenta</div>
+          </div>
+        </div>
+      )}
       <form onSubmit={onSubmit} className="form-css">
         <label>Nombre del producto</label>
         <input
           type="text"
           {...register("nombre")}
-          placeholder=" Nombre del producto"
+          placeholder="Nombre del producto"
           className="registro-inputs"
-          value={
-            apiData && apiData.transcription
-              ? apiData.transcription.nombre_producto || producto.nombre
-              : producto.nombre
-          }
-          onChange={handleChange}
-        ></input>
-        <label>Cantidad a ingresar</label>
+        />
+        {errors.nombre && <p className="redto">Campo requerido</p>}
 
+        <label>Cantidad a ingresar</label>
         <input
           type="text"
           {...register("cantidad")}
-          placeholder=" Cantidad"
+          placeholder="Cantidad"
           className="registro-inputs"
-          value={
-            apiData && apiData.transcription
-              ? apiData.transcription.cantidad || producto.cantidad
-              : producto.cantidad
-          }
-          onChange={handleChange}
-        ></input>
+        />
+        {errors.cantidad && <p className="redto">Campo requerido</p>}
+        {formErrors.cantidad && <p className="redto">{formErrors.cantidad}</p>}
         <label>Precio de compra</label>
-
         <input
           type="text"
           {...register("preciocompra")}
-          placeholder=" Precio de compra"
+          placeholder="Precio de compra"
           className="registro-inputs"
-          value={
-            apiData && apiData.transcription
-              ? apiData.transcription.precio || producto.preciocompra
-              : producto.preciocompra
-          }
-          onChange={handleChange}
-        ></input>
+        />
+        {errors.preciocompra && <p className="redto">Campo requerido</p>}
+        {formErrors.preciocompra && (
+          <p className="redto">{formErrors.preciocompra}</p>
+        )}
         <label>Precio de Venta</label>
-
         <input
           type="text"
           {...register("precioventa")}
-          placeholder=" Precio de venta"
+          placeholder="Precio de venta"
           className="registro-inputs"
-          onChange={handleChange}
-        ></input>
-
-        <button
-          type="submit"
-          disabled={!isFormFilled()}
-          style={{ backgroundColor: !isFormFilled() ? "lightgrey" : "blue" }}
-        >
-          Registrar Producto
-        </button>
+        />
+        {errors.precioventa && <p className="redto">Campo requerido</p>}
+        {formErrors.precioventa && (
+          <p className="redto">{formErrors.precioventa}</p>
+        )}
+        <button type="submit">Registrar Producto</button>
       </form>
       {showSuccessMessage && (
         <div className="modal">
@@ -184,8 +202,8 @@ function Agregarstock() {
             </span>
             <p>Nombre: {productoCreado.nombre}</p>
             <p>Cantidad: {productoCreado.cantidad}</p>
-            <p>Precio de compra: $ {productoCreado.preciocompra}</p>
-            <p>Precio de venta: $ {productoCreado.precioventa}</p>
+            <p>Precio de compra: S/. {productoCreado.preciocompra}</p>
+            <p>Precio de venta: S/. {productoCreado.precioventa}</p>
           </div>
         </div>
       )}
@@ -198,13 +216,13 @@ function Agregarstock() {
             <p>Nombre: {productoCreado.nombre}</p>
             <p>Cantidad Previa: {previacan}</p>
             <p>Cantidad Nueva: {nuevacan}</p>
-            <p>Precio de compra: $ {productoCreado.preciocompra}</p>
-            <p>Precio de venta: $ {productoCreado.precioventa}</p>
+            <p>Precio de compra: S/. {productoCreado.preciocompra}</p>
+            <p>Precio de venta: S/. {productoCreado.precioventa}</p>
           </div>
         </div>
       )}
       <div className="audio-recorder">
-        <AudioRecorder onApiResponse={handleApiResponse} />
+        <AudioRecorder onApiResponse={setApiData} />
       </div>
     </div>
   );

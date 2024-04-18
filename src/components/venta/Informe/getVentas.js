@@ -16,7 +16,14 @@ function GetVentas() {
   const { calltokenbodega } = useBodega();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [info, setinfo] = useState(false);
+  const openInfo = () => {
+    setinfo(true);
+  };
 
+  const closeInfo = () => {
+    setinfo(false);
+  };
   const { ventas, getVentas } = useVenta();
   useEffect(() => {
     getVentas();
@@ -121,12 +128,29 @@ function GetVentas() {
     <div>
       <nav className="menu-nav">
         <h1 className="menu-title">Ventas realizadas</h1>{" "}
+        <div className="button-help" onClick={openInfo}>
+          AYUDA
+        </div>
         <Link to="/mainmenu">
           <div className="menu-button">
             <FontAwesomeIcon icon={faArrowLeft} />
           </div>
         </Link>
       </nav>
+      {info && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeInfo}>
+              &times;
+            </span>{" "}
+            <div className="texto-grande">
+              Los comandos de voz para esta pagina son:
+            </div>
+            <div className="texto-grande">Descagar</div>
+            <div>Descarga el detalle de las VENTAS como formato PDF</div>
+          </div>
+        </div>
+      )}
       <div style={{ marginBottom: "100px" }}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <input

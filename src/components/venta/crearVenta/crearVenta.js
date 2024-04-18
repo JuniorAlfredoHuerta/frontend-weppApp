@@ -20,6 +20,15 @@ function CreateVentaPage() {
 
   const { stocks, getStocks, updateStock } = useStock();
 
+  const [info, setinfo] = useState(false);
+  const openInfo = () => {
+    setinfo(true);
+  };
+
+  const closeInfo = () => {
+    setinfo(false);
+  };
+
   useEffect(() => {
     getStocks();
   }, []);
@@ -114,12 +123,38 @@ function CreateVentaPage() {
     <div className="menu-container">
       <nav className="menu-nav">
         <h1 className="menu-title">Venta de Producto</h1>{" "}
+        <div className="button-help" onClick={openInfo}>
+          AYUDA
+        </div>
         <Link to="/mainmenu">
           <div className="menu-button">
             <FontAwesomeIcon icon={faArrowLeft} />
           </div>
         </Link>
       </nav>
+      {info && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeInfo}>
+              &times;
+            </span>{" "}
+            <div className="texto-grande">
+              Los comandos de voz para esta pagina son:
+            </div>
+            <div>
+              Para agregar una venta en esta pagina necesitaras decir el comando
+              de la siguiente forma
+            </div>
+            <div className="texto-grande">Vendi + </div>
+            <div className="texto-grande">"Cantidad numerica " + </div>
+            <div className="texto-grande">"Nombre del producto" + </div>
+            <div className="texto-grande">Salio + </div>
+            <div className="texto-grande">"Precio de venta total" </div>
+            <div className="texto-grande">Ejemplo: </div>{" "}
+            <div>Vendi cinco Inka Kola costo doce soles cincuenta</div>
+          </div>
+        </div>
+      )}
       <div className="contenedor">
         <h3>Añada un producto para la venta</h3>
         <div className="iconplus" onClick={handleAddProducto}>

@@ -190,3 +190,20 @@ h3 {
   align-items: center;
   justify-content: space-between;
 }
+.button-help {
+  background-color: #ffffff; /* Color de fondo del botón */
+  color: #000000; /* Color del texto del botón (negro) */
+  padding: 6px 12px; /* Reducir el padding para hacer el botón más compacto */
+  border: 2px solid #030303; /* Establecer un borde sólido de color oscuro */
+  border-radius: 8px; /* Agregar esquinas redondeadas al botón */
+  font-size: 16px; /* Tamaño de fuente del texto */
+  cursor: pointer; /* Cambiar el cursor al pasar sobre el botón */
+  transition: background-color 0.2s, color 0.2s; /* Transición suave al cambiar de color */
+  margin-right: 2px;
+}
+
+.texto-grande {
+  font-size: 20px; /* Tamaño de la letra: 20px */
+  font-weight: bold; /* Hacer la letra negrita */
+  margin-bottom: 5px;
+}

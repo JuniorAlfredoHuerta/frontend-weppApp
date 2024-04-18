@@ -22,6 +22,14 @@ function SearchStock() {
   const navigate = useNavigate();
   const { getBodegas, bodegas, gettokenbodega, calltokenbodega } = useBodega();
 
+  const [info, setinfo] = useState(false);
+  const openInfo = () => {
+    setinfo(true);
+  };
+
+  const closeInfo = () => {
+    setinfo(false);
+  };
   useEffect(() => {
     getStocks();
   }, []);
@@ -107,12 +115,31 @@ function SearchStock() {
     <div className="menu-container">
       <nav className="menu-nav">
         <h1 className="menu-title">Buscar Producto</h1>{" "}
+        <div className="button-help" onClick={openInfo}>
+          AYUDA
+        </div>
         <Link to="/mainmenu">
           <div className="menu-button">
             <FontAwesomeIcon icon={faArrowLeft} />
           </div>
         </Link>
       </nav>
+      {info && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeInfo}>
+              &times;
+            </span>{" "}
+            <div className="texto-grande">
+              Los comandos de voz para esta pagina son:
+            </div>
+            <div className="texto-grande">"Nombre del Producto"</div>
+            <div>Te dirije al detalle producto que deseas buscar</div>
+            <div className="texto-grande">Descagar</div>
+            <div>Descarga el detalle del INVENTARIO como formato PDF</div>
+          </div>
+        </div>
+      )}
       <div>
         <h1 style={{ marginLeft: "10px" }}>Lista de Productos</h1>
         <div className="product-container">
