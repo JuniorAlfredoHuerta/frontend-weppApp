@@ -2,43 +2,64 @@ import { useForm } from "react-hook-form";
 import { useBodega } from "../../context/BodegaContext";
 import { useEffect, useState } from "react";
 import "./editbodega.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faTrash } from "@fortawesome/free-solid-svg-icons";
 import AudioRecorder from "../../../VoiceRecognition/audiocapture";
+import Cookies from "js-cookie";
 
 function EditPage() {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const { getBodegas, calltokenbodega, bodegas, updateBodega } = useBodega();
-  const [bodegadata, setBodega] = useState({});
+  const { calltokenbodega, updateBodega, getBodega } = useBodega();
+  const [bodegadata, setBodegaData] = useState({});
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    getBodegas(bodegas);
-    if (bodegas.length > 0) {
-      setBodega(bodegas[0]);
-    }
-  }, []);
+    const fetchData = async () => {
+      const res = await calltokenbodega();
+      const databodega = await getBodega(res.data.id);
+      if (res && res.data) {
+        // Llenar los valores del formulario con setValue
+        setValue("nombrebodega", databodega.nombrebodega);
+        setValue("idDoc", databodega.idDoc);
+        setValue("razonsocial", databodega.razonsocial);
+        setValue("ubicacion", databodega.ubicacion);
+      }
+    };
 
-  const onSubmit = handleSubmit(async (data) => {
-    const { nombre, ...restoData } = data;
-    await updateBodega(bodegadata._id, restoData);
+    fetchData();
+  }, [calltokenbodega, getBodega, setValue]);
+
+  const onSubmit = async (data) => {
+    const res = await calltokenbodega();
+    const databodega = await getBodega(res.data.id);
+    await updateBodega(databodega._id, data);
     setShowSuccessMessage(true);
-
-    setTimeout(() => {
-      setShowSuccessMessage(false);
-    }, 3000);
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setBodega({
-      ...bodegadata,
-      [name]: value,
-    });
   };
+
   const closeMessage = () => {
     setShowSuccessMessage(false);
+  };
+
+  const handleDeleteConfirmation = () => {
+    setShowConfirmation(true);
+  };
+
+  const handleConfirmDelete = () => {
+    // Aquí iría la lógica para eliminar la bodega
+    // Esta función se llamaría al confirmar la eliminación
+    // Por ahora, solo se muestra el mensaje de confirmación
+    setShowConfirmation(false);
+    Cookies.remove("tokenbodega");
+    navigate("/mainmenu");
+    alert("Bodega eliminada correctamente");
   };
 
   return (
@@ -51,47 +72,53 @@ function EditPage() {
           </div>
         </Link>
       </nav>
-      {bodegas.length > 0 && ( // Aquí se verifica si hay bodegas en el estado
-        <form onSubmit={onSubmit} className="form-css">
-          <h3>Actualiza los datos de la bodega</h3>
-          <label>Nombre de la bodega</label>
-          <input
-            type="text"
-            {...register("nombrebodega", { required: true })}
-            value={bodegadata.nombrebodega || ""}
-            className="registro-inputs"
-            onChange={handleChange}
-          />
-          <label>Documento de la bodega</label>
-          <input
-            type="text"
-            {...register("idDoc", { required: true })}
-            value={bodegadata.idDoc || ""}
-            className="registro-inputs"
-            onChange={handleChange}
-          />{" "}
-          <label>Razon Social</label>
-          <input
-            type="text"
-            {...register("razonsocial", { required: true })}
-            value={bodegadata.razonsocial || ""}
-            className="registro-inputs"
-            onChange={handleChange}
-          />
-          <label>Ubicacion de la bodega</label>
-          <input
-            type="text"
-            {...register("ubicacion", { required: true })}
-            value={bodegadata.ubicacion || ""}
-            className="registro-inputs"
-            onChange={handleChange}
-          />
-          <div className="audio-recorder">
-            <AudioRecorder />
-          </div>
-          <button type="submit">Guardar cambios</button>
-        </form>
-      )}
+      <div className="button-container">
+        <div> </div>
+        <button className="delete-button" onClick={handleDeleteConfirmation}>
+          <FontAwesomeIcon icon={faTrash} />
+          Eliminar
+        </button>
+      </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="form-css">
+        <h3>Actualiza los datos de la bodega</h3>
+        <label>Nombre de la bodega</label>
+        <input
+          type="text"
+          {...register("nombrebodega", { required: true })}
+          className="registro-inputs"
+        />
+        {errors.nombrebodega && (
+          <p className="error-message">Campo requerido</p>
+        )}
+
+        <label>Documento de la bodega</label>
+        <input
+          type="text"
+          {...register("idDoc", { required: true })}
+          className="registro-inputs"
+        />
+        {errors.idDoc && <p className="error-message">Campo requerido</p>}
+
+        <label>Razon Social</label>
+        <input
+          type="text"
+          {...register("razonsocial", { required: true })}
+          className="registro-inputs"
+        />
+        {errors.razonsocial && <p className="error-message">Campo requerido</p>}
+
+        <label>Direccion de la bodega</label>
+        <input
+          type="text"
+          {...register("ubicacion", { required: true })}
+          className="registro-inputs"
+        />
+        {errors.ubicacion && <p className="error-message">Campo requerido</p>}
+        <div className="audio-recorder">
+          <AudioRecorder />
+        </div>
+        <button type="submit">Guardar cambios</button>
+      </form>
       {showSuccessMessage && (
         <div className="success-message">
           <span className="close" onClick={closeMessage}>
@@ -100,6 +127,22 @@ function EditPage() {
           <p>La bodega fue actualizada correctamente.</p>
         </div>
       )}
+      {showConfirmation && (
+        <div className="modal">
+          <div className="modal-content">
+            <div className="confirmation-modal">
+              <p>¿Estás seguro de que quieres eliminar esta bodega?</p>
+              <div className="button-container">
+                <button onClick={handleConfirmDelete}>Sí, Eliminar</button>
+                <button onClick={() => setShowConfirmation(false)}>
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="audio-recorder">
         <AudioRecorder />
       </div>

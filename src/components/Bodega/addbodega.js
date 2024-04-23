@@ -1,4 +1,6 @@
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+
 import "./addbodega.css";
 import { useBodega } from "../context/BodegaContext";
 
@@ -9,8 +11,11 @@ function AddBodegaPage({ closeModal }) {
     formState: { errors },
   } = useForm();
 
-  const { createBodega, getBodegas, errors: ERRORES } = useBodega();
-
+  const { createBodega, getBodegas, errors: ERRORES, setErros } = useBodega();
+  useEffect(() => {
+    // Limpia los errores al montar el componente
+    setErros([]);
+  }, [setErros]);
   const onSubmit = async (data) => {
     try {
       // Validar que idDoc tenga exactamente 11 dígitos

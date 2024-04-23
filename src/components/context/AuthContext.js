@@ -19,7 +19,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [errors, setErros] = useState([]);
+  const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const signup = async (user) => {
@@ -28,23 +28,33 @@ export const AuthProvider = ({ children }) => {
       //console.log(res.data);
       setUser(res.data);
       setIsAuthenticated(true);
+      setErrors([]);
     } catch (error) {
-      //console.log(error.response.data);
-      setErros(error.response.data);
+      if (error.response) {
+        //console.log(error.response.data);
+        setErrors(error.response.data);
+      } else {
+        setErrors(["Error de conexión: No se pudo conectar con el servidor"]);
+      }
     }
   };
 
   const signin = async (user) => {
     try {
       const res = await loginRequest(user);
-      //console.log(res.data);
       setUser(res.data);
       setIsAuthenticated(true);
+      setErrors([]);
     } catch (error) {
-      //console.log(error.response.data);
-      setErros(error.response.data);
+      if (error.response) {
+        setErrors(error.response.data);
+      } else {
+        //console.error("Error de conexión:", error.message);
+        setErrors(["Error de conexión: No se pudo conectar con el servidor"]);
+      }
     }
   };
+
   const logout = () => {
     Cookies.remove("token");
     Cookies.remove("tokenbodega");
@@ -98,6 +108,7 @@ export const AuthProvider = ({ children }) => {
         checkLogin,
         updateUser,
         errors,
+        setErrors,
         loading,
       }}
     >

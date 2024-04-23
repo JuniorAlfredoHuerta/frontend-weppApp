@@ -7,7 +7,6 @@ import {
   faCartArrowDown,
   faSheetPlastic,
   faPenToSquare,
-  faCircleInfo,
 } from "@fortawesome/free-solid-svg-icons";
 import AudioRecorder from "../VoiceRecognition/audiocapture.js";
 import "./MainMenu.css";
@@ -19,20 +18,29 @@ import Cookies from "js-cookie";
 import { useStock } from "./context/AddContext.js";
 
 function MainMenu() {
-  const [apiData, setApiData] = useState(null);
+  const [setApiData] = useState(null);
   const [modal, setModal] = useState(false);
   const [info, setinfo] = useState(false);
 
   const navigate = useNavigate();
   const { getBodegas, bodegas, gettokenbodega, calltokenbodega } = useBodega();
   const { getStocks, stocks } = useStock();
+  const [CommandNotRecognized, setCommandNotRecognized] = useState(false);
 
   useEffect(() => {
-    getStocks();
-  }, []);
+    const fetchStocks = async () => {
+      const tokenBodega = Cookies.get("tokenbodega");
+      if (tokenBodega) {
+        await getStocks();
+      }
+    };
+
+    fetchStocks();
+  }, [getStocks]);
+
   useEffect(() => {
     getBodegas();
-  }, [bodegas]);
+  }, [getBodegas]);
 
   const handleApiResponse = (data) => {
     setApiData(data);
@@ -63,13 +71,11 @@ function MainMenu() {
               const idproducto = foundProduct._id;
               navigate(`/producto/${idproducto}`);
             }
-          default:
-            console.log("Comando no reconocido");
             break;
+          default:
+            setCommandNotRecognized(true);
         }
       }
-    } else {
-      console.log("ELIJA BODEGA");
     }
   };
 
@@ -79,22 +85,17 @@ function MainMenu() {
 
   const closeModal = () => {
     setModal(false);
+    setCommandNotRecognized(false);
+    setinfo(false);
   };
 
   const openInfo = () => {
     setinfo(true);
   };
 
-  const closeInfo = () => {
-    setinfo(false);
-  };
-  //autenciador logout y username
   const { logout, user } = useAuth();
 
-  //seleccionador
   const [selectedBodega, setSelectedBodega] = useState("");
-  const [selectedId] = useState(null);
-  const [selectedNombre] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -109,38 +110,36 @@ function MainMenu() {
           });
           // Realiza aquí las operaciones que necesites con bodegadeltoken
         } catch (error) {
-          console.error("Error al obtener la información de la bodega:", error);
+          //console.error("Error al obtener la información de la bodega:", error);
         }
       } else {
-        console.log("No hay token");
+        //console.log("No hay token");
       }
     };
-
     fetchData(); // Llamada a la función asincrónica
-  }, []);
+  }, [calltokenbodega]);
 
   const handleSelectChange = async (event) => {
     const selectedId = event.target.value;
     const selectedNombre = bodegas.find(
       (bodega) => bodega._id === selectedId
     ).nombrebodega;
-    console.log(selectedId);
+    //console.log(selectedId);
     await gettokenbodega(selectedId);
 
     try {
       setSelectedBodega({ id: selectedId, nombre: selectedNombre });
 
-      // Llamada a calltokenbodega después de haber establecido el nuevo estado
-      const res = await calltokenbodega();
-      console.log(res.data);
-      const cookies = Cookies.get();
-      console.log(cookies.tokenbodega);
+      //const res = await calltokenbodega();
+      //console.log(res.data);
+      //const cookies = Cookies.get();
+      //console.log(cookies.tokenbodega);
 
       // Realiza otras operaciones con la respuesta (res) si es necesario
 
       // Llamada a gettokenbodega para actualizar el token
     } catch (error) {
-      console.error("Error al obtener la información de la bodega:", error);
+      //console.error("Error al obtener la información de la bodega:", error);
     }
   };
 
@@ -157,11 +156,25 @@ function MainMenu() {
           </div>
         </Link>
       </nav>
+      {modal && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeModal}>
+              &times;
+            </span>
+            <div className="texto-grande">Comando no reconocido</div>
+            <div>
+              El comando que ha dicho no es reconocido. Por favor, intente de
+              nuevo. De click en AYUDA si lo necesita.
+            </div>
+          </div>
+        </div>
+      )}
       <div className="App">
         {info && (
           <div className="modal">
             <div className="modal-content">
-              <span className="close" onClick={closeInfo}>
+              <span className="close" onClick={closeModal}>
                 &times;
               </span>{" "}
               <div className="texto-grande">
@@ -202,33 +215,42 @@ function MainMenu() {
           alignItems: "center",
         }}
       >
-        <select
-          value={selectedBodega.id}
-          onChange={handleSelectChange}
-          className="select"
-        >
-          {!Cookies.get("tokenbodega") && (
-            <option value="">Selecciona una bodega</option>
-          )}
+        {bodegas.length === 0 ? (
+          <div className="">CREE UNA BODEGA</div>
+        ) : (
+          <select
+            value={selectedBodega.id}
+            onChange={handleSelectChange}
+            className="select"
+          >
+            {!Cookies.get("tokenbodega") && (
+              <option value="">Selecciona una bodega</option>
+            )}
 
-          {bodegas.length === 0 && (
-            <option value disabled="">
-              Cree una bodega
-            </option>
-          )}
+            {bodegas.length === 0 && (
+              <option value disabled="">
+                Cree una bodega
+              </option>
+            )}
 
-          {bodegas.map((bodega) => (
-            <option key={bodega._id} value={bodega._id}>
-              {bodega.nombrebodega}
-            </option>
-          ))}
-        </select>
+            {bodegas.map((bodega) => (
+              <option key={bodega._id} value={bodega._id}>
+                {bodega.nombrebodega}
+              </option>
+            ))}
+          </select>
+        )}
+
         <button className="button_add" onClick={openModal}>
           <FontAwesomeIcon className="icon" icon={faAdd} />
         </button>
-        <Link to="/editBodega">
-          <FontAwesomeIcon icon={faPenToSquare} />
-        </Link>
+        {bodegas.length === 0 || !Cookies.get("tokenbodega") ? (
+          <div className=""></div>
+        ) : (
+          <Link to="/editBodega">
+            <FontAwesomeIcon icon={faPenToSquare} />
+          </Link>
+        )}
       </div>
       <div className="icon-container">
         <div className="icon-row">

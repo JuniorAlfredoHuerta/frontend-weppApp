@@ -2,6 +2,7 @@ import { useContext, createContext, useState } from "react";
 import {
   createBodegaRequest,
   editBodegaRequest,
+  getBodegaRequest,
   getBodegasRequest,
   tokenBodega,
   verifytokenBodega,
@@ -20,8 +21,16 @@ export const useBodega = () => {
 
 export const BodegaProvider = ({ children }) => {
   const [bodegas, setBodegas] = useState([]);
-  const [bodega, setBodega] = useState(null);
   const [errors, setErros] = useState([]);
+
+  const getBodega = async (id) => {
+    try {
+      const res = await getBodegaRequest(id);
+      return res.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const getBodegas = async () => {
     try {
@@ -81,7 +90,9 @@ export const BodegaProvider = ({ children }) => {
         gettokenbodega,
         calltokenbodega,
         updateBodega,
+        getBodega,
         errors,
+        setErros,
       }}
     >
       {children}

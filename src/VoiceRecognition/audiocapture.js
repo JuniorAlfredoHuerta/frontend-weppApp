@@ -15,7 +15,6 @@ const AudioRecorder = ({ onApiResponse }) => {
   const audioChunks = useRef([]);
   const [isRecording, setIsRecording] = useState(false);
   const [encoderRegistered, setEncoderRegistered] = useState(false);
-
   useEffect(() => {
     const initializeEncoder = async () => {
       if (!encoderRegistered) {
@@ -29,12 +28,10 @@ const AudioRecorder = ({ onApiResponse }) => {
 
     initializeEncoder();
 
-    return () => {
-      // Lógica de limpieza si es necesario
-    };
+    return () => {};
   }, [encoderRegistered]);
 
-  const startRecording = async () => {
+  const toggleRecording = async () => {
     if (!isRecording) {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorder.current = new MediaRecorder(stream, {
@@ -47,11 +44,7 @@ const AudioRecorder = ({ onApiResponse }) => {
       };
       mediaRecorder.current.start();
       setIsRecording(true);
-    }
-  };
-
-  const stopRecording = () => {
-    if (isRecording) {
+    } else {
       mediaRecorder.current.stop();
       mediaRecorder.current.onstop = async () => {
         const blob = new Blob(audioChunks.current, { type: "audio/wav" });
@@ -65,14 +58,6 @@ const AudioRecorder = ({ onApiResponse }) => {
         setIsRecording(false);
       };
     }
-  };
-
-  const handleMouseDown = () => {
-    startRecording();
-  };
-
-  const handleMouseUp = () => {
-    stopRecording();
   };
 
   const sendAudioToAPI = async (audioBlob, fileName) => {
@@ -90,7 +75,7 @@ const AudioRecorder = ({ onApiResponse }) => {
       }
 
       const data = await response.json();
-      console.log(data);
+      //console.log(data);
       onApiResponse(data);
     } catch (error) {
       console.error(error);
@@ -101,8 +86,7 @@ const AudioRecorder = ({ onApiResponse }) => {
     <div className="container-with-blue-background">
       <button
         className={`microphone-button ${isRecording ? "recording" : ""}`}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
+        onClick={toggleRecording}
       >
         <FontAwesomeIcon icon={faMicrophone} />
       </button>
@@ -119,5 +103,4 @@ const AudioRecorder = ({ onApiResponse }) => {
     </div>
   );
 };
-
 export default AudioRecorder;

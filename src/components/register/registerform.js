@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./register.css";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
@@ -9,18 +9,20 @@ function Registerform() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { signup, isAuthenticated, errors: Autherrors } = useAuth();
+
+  const { signup, isAuthenticated, errors: Autherrors, setErrors } = useAuth();
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit(async (values) => {
     signup(values);
+    setErrors([]);
   });
 
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/mainmenu");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, navigate]);
 
   return (
     <div className="menu-container">

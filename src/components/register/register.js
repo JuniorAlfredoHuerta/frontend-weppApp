@@ -2,8 +2,15 @@ import React from "react";
 import "./register.css";
 import Registerform from "../register/registerform";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Register() {
+  const { setErrors } = useAuth();
+
+  const handleClearErrors = () => {
+    setErrors([]);
+  };
+
   return (
     <div className="menu-container">
       <nav className="main-menu">
@@ -16,7 +23,7 @@ function Register() {
       </div>
       <div className="container">
         <p>Si ya posee una cuenta ingrese </p>
-        <Link to="/">
+        <Link to="/" onClick={handleClearErrors}>
           <button>Ingreso</button>
         </Link>
       </div>{" "}

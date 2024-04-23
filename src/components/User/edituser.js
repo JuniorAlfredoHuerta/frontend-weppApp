@@ -8,44 +8,44 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 function Edituser() {
   const { user, updateUser, checkLogin } = useAuth();
-  const { register, handleSubmit } = useForm();
-  const [userdata, setUser] = useState({});
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   useEffect(() => {
-    setUser(user);
-    console.log(user);
-    formatUserForForm(user);
-  }, []);
+    // Llena los campos del formulario con los datos del usuario al cargar el componente
+    if (user) {
+      setValue("username", user.username || "");
+      setValue("name", user.name || "");
+      setValue("idDoc", user.idDoc || "");
 
-  const formatUserForForm = (user) => {
-    if (user && user.birthdate) {
-      const formattedDate = user.birthdate.substring(0, 10); // Extrae la parte de la fecha necesaria (AAAA-MM-DD)
-      setUser({ ...user, birthdate: formattedDate }); // Actualiza la fecha en el estado para que sea compatible con el campo de entrada de fecha
+      // Formatea la fecha de nacimiento para el input tipo 'date'
+      const formattedDate = user.birthdate
+        ? user.birthdate.substring(0, 10)
+        : "";
+      setValue("birthdate", formattedDate);
+    }
+  }, [user, setValue]);
+
+  const onSubmit = async (data) => {
+    try {
+      // Enviar la fecha en formato ISO (AAAA-MM-DD) al backend
+      data.birthdate = data.birthdate + "T00:00:00.000Z"; // Agrega la hora para el formato ISO
+      await updateUser(user.id, data); // Actualiza el usuario con los datos del formulario
+      setShowSuccessMessage(true);
+      checkLogin();
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 3000);
+    } catch (error) {
+      console.error("Error al actualizar el usuario:", error);
     }
   };
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser({
-      ...userdata,
-      [name]: value,
-    });
-  };
 
-  const closeMessage = () => {
-    setShowSuccessMessage(false);
-  };
-
-  const onSubmit = handleSubmit(async (data) => {
-    const { password, ...restoData } = data;
-    console.log(user.id);
-    await updateUser(user.id, restoData);
-    setShowSuccessMessage(true);
-    checkLogin();
-    setTimeout(() => {
-      setShowSuccessMessage(false);
-    }, 3000);
-  });
   return (
     <div className="menu-container">
       <nav className="menu-nav">
@@ -56,41 +56,40 @@ function Edituser() {
           </div>
         </Link>
       </nav>
-      <form onSubmit={onSubmit} className="form-css">
+      <form onSubmit={handleSubmit(onSubmit)} className="form-css">
         <h3>Actualiza los datos del usuario</h3>
         <label>Nombre de la cuenta</label>
         <input
           type="text"
           {...register("username", { required: true })}
-          value={userdata.username || ""}
           className="registro-inputs"
-          onChange={handleChange}
         />
+        {errors.username && <p className="redto">Campo requerido</p>}
+
         <label>Nombre real del usuario</label>
         <input
           type="text"
           {...register("name", { required: true })}
-          value={userdata.name || ""}
           className="registro-inputs"
-          onChange={handleChange}
         />
-        <label>Documento</label>
+        {errors.name && <p className="redto">Campo requerido</p>}
 
+        <label>Documento</label>
         <input
           type="text"
           {...register("idDoc", { required: true })}
-          value={userdata.idDoc || ""}
           className="registro-inputs"
-          onChange={handleChange}
         />
+        {errors.idDoc && <p className="redto">Campo requerido</p>}
+
         <label>Fecha de nacimiento</label>
         <input
           type="date"
           {...register("birthdate", { required: true })}
-          value={userdata.birthdate || ""}
           className="registro-inputs"
-          onChange={handleChange}
         />
+        {errors.birthdate && <p className="redto">Campo requerido</p>}
+
         <div className="audio-recorder">
           <AudioRecorder />
         </div>
@@ -99,16 +98,14 @@ function Edituser() {
 
       {showSuccessMessage && (
         <div className="success-message">
-          <span className="close" onClick={closeMessage}>
+          <span className="close" onClick={() => setShowSuccessMessage(false)}>
             &times;
           </span>
           <p>El usuario fue actualizado correctamente.</p>
         </div>
       )}
-      <div className="audio-recorder">
-        <AudioRecorder />
-      </div>
     </div>
   );
 }
+
 export default Edituser;
