@@ -8,28 +8,25 @@ import AudioRecorder from "../../../VoiceRecognition/audiocapture";
 import { useForm } from "react-hook-form";
 
 function StockPage() {
-  const { register, handleSubmit, reset } = useForm();
-
+  const { register, handleSubmit, reset, setValue } = useForm(); // Agrega setValue
   const { id } = useParams();
   const { stocks, getStock, updateStock } = useStock();
-  const [apiData, setApiData] = useState(null);
   const [producto, setProducto] = useState({});
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [info, setinfo] = useState(false);
-  const openInfo = () => {
-    setinfo(true);
-  };
+  const [info, setInfo] = useState(false);
 
-  const closeInfo = () => {
-    setinfo(false);
-  };
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await getStock(id);
         setProducto(res);
+        // Actualiza los valores del formulario cuando se obtiene el producto
+        setValue("nombre", res.nombre);
+        setValue("cantidad", res.cantidad);
+        setValue("preciocompra", res.preciocompra);
+        setValue("precioventa", res.precioventa);
+        setValue("ubicacion", res.ubicacion);
       } catch (error) {
-        // Manejo de errores
         console.error("Error fetching product:", error);
       }
     };
@@ -37,29 +34,22 @@ function StockPage() {
     if (id) {
       fetchData();
     }
-  }, [id, getStock]);
+  }, [id, getStock, setValue]);
 
-  //if (!selectedProduct) {
-  //  return <div>Loading...</div>;
-  //}
   const onSubmit = handleSubmit(async (data) => {
     await updateStock(id, data);
     setShowSuccessMessage(true);
-
     setTimeout(() => {
       setShowSuccessMessage(false);
     }, 3000);
   });
 
   const handleApiResponse = (data) => {
-    setApiData(data);
-    if (data && data.transcription && data.transcription.cantidad) {
-      const cantidadFromAPI = data.transcription.cantidad;
-      setProducto((prevProducto) => ({
-        ...prevProducto,
-        cantidad: parseInt(producto.cantidad) + parseInt(cantidadFromAPI),
-      }));
-    }
+    // Actualiza el estado del producto con los datos de la API
+    setProducto((prevProducto) => ({
+      ...prevProducto,
+      cantidad: parseInt(prevProducto.cantidad) + parseInt(data.transcription.cantidad),
+    }));
   };
 
   const handleChange = (e) => {
@@ -68,6 +58,14 @@ function StockPage() {
       ...producto,
       [name]: value,
     });
+  };
+
+  const openInfo = () => {
+    setInfo(true);
+  };
+
+  const closeInfo = () => {
+    setInfo(false);
   };
 
   const closeMessage = () => {
@@ -106,14 +104,14 @@ function StockPage() {
         <h3> Actualiza los datos del producto</h3>
         <label>Nombre del producto</label>
         <input
-          type="text"
-          {...register("nombre", { required: true })}
-          value={producto.nombre}
-          className="registro-inputs"
-          onChange={handleChange}
-        ></input>
-        <label>Cantidad en el almacen</label>
+  type="text"
+  {...register("nombre", { required: true })}
+  value={producto.nombre || ""} // Asegura que el valor inicial sea una cadena vacía
+  className="registro-inputs"
+  onChange={handleChange}
+></input>
 
+        <label>Cantidad en el almacen</label>
         <input
           type="text"
           {...register("cantidad", { required: true })}
@@ -125,25 +123,23 @@ function StockPage() {
         <input
           type="text"
           {...register("preciocompra", { required: true })}
-          value={producto.preciocompra}
+          value={producto.preciocompra || ""}
           className="registro-inputs"
           onChange={handleChange}
         ></input>
         <label>Precio de venta</label>
-
         <input
           type="text"
           {...register("precioventa", { required: true })}
-          value={producto.precioventa}
+          value={producto.precioventa || ""}
           className="registro-inputs"
           onChange={handleChange}
         ></input>
         <label>Ubicacion del producto</label>
-
         <input
           type="text"
           {...register("ubicacion")}
-          value={producto.ubicacion}
+          value={producto.ubicacion || ""}
           className="registro-inputs"
           onChange={handleChange}
         ></input>
@@ -164,4 +160,5 @@ function StockPage() {
     </div>
   );
 }
+
 export default StockPage;

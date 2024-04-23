@@ -1,77 +1,68 @@
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useStock } from "../../context/AddContext";
 import "./AddProducto.css";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AudioRecorder from "../../../VoiceRecognition/audiocapture";
-import { useEffect, useState } from "react";
 
 function Agregarstock() {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const { createStock, stocks, getStocks, updateStock } = useStock();
 
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showSuccessMessageE, setShowSuccessMessageE] = useState(false);
   const [productoCreado, setProductoCreado] = useState(null);
-
   const [previacan, setPreviacan] = useState("");
   const [nuevacan, setNuevacan] = useState("");
-
   const [apiData, setApiData] = useState(null);
   const [formErrors, setFormErrors] = useState({});
 
-  const [info, setinfo] = useState(false);
-  const openInfo = () => {
-    setinfo(true);
-  };
-
-  const closeInfo = () => {
-    setinfo(false);
-  };
+  const [info, setInfo] = useState(false);
 
   useEffect(() => {
     getStocks();
   }, [stocks]);
 
+  const openInfo = () => {
+    setInfo(true);
+  };
+
+  const closeInfo = () => {
+    setInfo(false);
+  };
+
   const closeMessage = () => {
     setShowSuccessMessageE(false);
     setShowSuccessMessage(false);
   };
-  const onSubmit = handleSubmit(async (data) => {
-    const { cantidad, preciocompra, precioventa } = data;
 
-    const existioproducto = stocks.find(
-      (stock) => stock.nombre === data.nombre
-    );
-    if (
-      !isValidInteger(cantidad) ||
-      !isValidNumber(preciocompra) ||
-      !isValidNumber(precioventa)
-    ) {
+  const onSubmit = async (data) => {
+    const { nombre, cantidad, preciocompra, precioventa } = data;
+
+    if (!nombre || !cantidad || !preciocompra || !precioventa) {
+      // Si algún campo está vacío, no se envía el formulario
+      return;
+    }
+
+    if (!isValidInteger(cantidad) || !isValidNumber(preciocompra) || !isValidNumber(precioventa)) {
+      // Si algún campo numérico no es válido, se muestran los errores
       setFormErrors({
         cantidad: isValidInteger(cantidad) ? "" : "Debe ser un número válido.",
-        preciocompra: isValidNumber(preciocompra)
-          ? ""
-          : "Debe ser un número válido.",
-        precioventa: isValidNumber(precioventa)
-          ? ""
-          : "Debe ser un número válido.",
+        preciocompra: isValidNumber(preciocompra) ? "" : "Debe ser un número válido.",
+        precioventa: isValidNumber(precioventa) ? "" : "Debe ser un número válido.",
       });
       return;
     }
+
+    const existioproducto = stocks.find((stock) => stock.nombre === nombre);
 
     if (existioproducto) {
       const cantidadExistente = existioproducto.cantidad || 0;
       setPreviacan(cantidadExistente);
 
-      const cantidadNueva =
-        parseInt(cantidadExistente) + parseInt(data.cantidad);
+      const cantidadNueva = parseInt(cantidadExistente) + parseInt(cantidad);
       setNuevacan(cantidadNueva);
 
       updateStock(existioproducto._id, { ...data, cantidad: cantidadNueva });
@@ -80,11 +71,11 @@ function Agregarstock() {
       createStock(data);
       setShowSuccessMessage(true);
     }
+
     setProductoCreado(data);
     setApiData(null);
-
     resetForm();
-  });
+  };
 
   const isValidInteger = (value) => {
     return !isNaN(value) && Number.isInteger(Number(value));
@@ -93,18 +84,6 @@ function Agregarstock() {
   const isValidNumber = (value) => {
     return !isNaN(value) && isFinite(value);
   };
-
-  useEffect(() => {
-    if (apiData && apiData.transcription) {
-      const newProducto = {
-        nombre: apiData.transcription.nombre_producto || "",
-        cantidad: apiData.transcription.cantidad || "",
-        preciocompra: apiData.transcription.precio || "",
-        precioventa: apiData.transcription.precio * 1.2 || "",
-      };
-      reset(newProducto);
-    }
-  }, [apiData, reset]);
 
   const resetForm = () => {
     reset({
@@ -115,6 +94,7 @@ function Agregarstock() {
     });
     setFormErrors({});
   };
+
   return (
     <div className="menu-container">
       <nav className="menu-nav">
@@ -151,11 +131,11 @@ function Agregarstock() {
           </div>
         </div>
       )}
-      <form onSubmit={onSubmit} className="form-css">
+      <form onSubmit={handleSubmit(onSubmit)} className="form-css">
         <label>Nombre del producto</label>
         <input
           type="text"
-          {...register("nombre")}
+          {...register("nombre", { required: true })}
           placeholder="Nombre del producto"
           className="registro-inputs"
         />
@@ -164,40 +144,42 @@ function Agregarstock() {
         <label>Cantidad a ingresar</label>
         <input
           type="text"
-          {...register("cantidad")}
+          {...register("cantidad", { required: true })}
           placeholder="Cantidad"
           className="registro-inputs"
         />
         {errors.cantidad && <p className="redto">Campo requerido</p>}
         {formErrors.cantidad && <p className="redto">{formErrors.cantidad}</p>}
+
         <label>Precio de compra</label>
         <input
           type="text"
-          {...register("preciocompra")}
+          {...register("preciocompra", { required: true })}
           placeholder="Precio de compra"
           className="registro-inputs"
         />
         {errors.preciocompra && <p className="redto">Campo requerido</p>}
-        {formErrors.preciocompra && (
-          <p className="redto">{formErrors.preciocompra}</p>
-        )}
+        {formErrors.preciocompra && <p className="redto">{formErrors.preciocompra}</p>}
+
         <label>Precio de Venta</label>
         <input
           type="text"
-          {...register("precioventa")}
+          {...register("precioventa", { required: true })}
           placeholder="Precio de venta"
           className="registro-inputs"
         />
         {errors.precioventa && <p className="redto">Campo requerido</p>}
-        {formErrors.precioventa && (
-          <p className="redto">{formErrors.precioventa}</p>
-        )}
+        {formErrors.precioventa && <p className="redto">{formErrors.precioventa}</p>}
+
         <button type="submit">Registrar Producto</button>
       </form>
       {showSuccessMessage && (
         <div className="modal">
           <div className="modal-content">
             <span className="close" onClick={closeMessage}>
+            <div>
+              El Producto fue creado
+            </div>
               &times;
             </span>
             <p>Nombre: {productoCreado.nombre}</p>
@@ -213,6 +195,9 @@ function Agregarstock() {
             <span className="close" onClick={closeMessage}>
               &times;
             </span>
+            <div>
+              El Producto fue modificado
+            </div>
             <p>Nombre: {productoCreado.nombre}</p>
             <p>Cantidad Previa: {previacan}</p>
             <p>Cantidad Nueva: {nuevacan}</p>
@@ -220,11 +205,7 @@ function Agregarstock() {
             <p>Precio de venta: S/. {productoCreado.precioventa}</p>
           </div>
         </div>
-      )}
-      <div className="audio-recorder">
-        <AudioRecorder onApiResponse={setApiData} />
-      </div>
-    </div>
+      )}    </div>
   );
 }
 

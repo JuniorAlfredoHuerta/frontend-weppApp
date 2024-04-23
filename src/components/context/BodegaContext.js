@@ -1,6 +1,7 @@
 import { useContext, createContext, useState } from "react";
 import {
   createBodegaRequest,
+  deleteBodegaRequest,
   editBodegaRequest,
   getBodegaRequest,
   getBodegasRequest,
@@ -71,6 +72,15 @@ export const BodegaProvider = ({ children }) => {
     }
   };
 
+  const deleteBodega = async (id, bodega) => {
+    try {
+      //console.log(id, stock);
+      await deleteBodegaRequest(id, bodega);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const createBodega = async (bodega) => {
     try {
       console.log(bodega);
@@ -91,6 +101,7 @@ export const BodegaProvider = ({ children }) => {
         calltokenbodega,
         updateBodega,
         getBodega,
+        deleteBodega,
         errors,
         setErros,
       }}

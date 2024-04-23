@@ -9,6 +9,6 @@ export const createBodegaRequest = async (bodega) =>
 export const editBodegaRequest = async (id, bodega) =>
   axios.put(`/bodegas/${id}`, bodega);
 
-export const deleteBodegaRequest = async (id) => axios.delete(`/bodegas/${id}`);
+export const deleteBodegaRequest = async (id) => axios.put(`/bodegasde/${id}`);
 export const getBodegaRequest = async (id) => axios.get(`/bodegas/${id}`);
 export const getBodegasRequest = async () => axios.get("/bodegas");

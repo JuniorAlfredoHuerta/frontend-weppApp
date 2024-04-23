@@ -18,7 +18,7 @@ import Cookies from "js-cookie";
 import { useStock } from "./context/AddContext.js";
 
 function MainMenu() {
-  const [setApiData] = useState(null);
+  const [ApiData,setApiData] = useState(null);
   const [modal, setModal] = useState(false);
   const [info, setinfo] = useState(false);
 
@@ -72,8 +72,9 @@ function MainMenu() {
               navigate(`/producto/${idproducto}`);
             }
             break;
-          default:
+          case "None":
             setCommandNotRecognized(true);
+            break;
         }
       }
     }

@@ -16,10 +16,11 @@ function EditPage() {
     formState: { errors },
   } = useForm();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const { calltokenbodega, updateBodega, getBodega } = useBodega();
+  const { calltokenbodega, updateBodega, getBodega, deleteBodega } = useBodega();
   const [bodegadata, setBodegaData] = useState({});
   const [showConfirmation, setShowConfirmation] = useState(false);
   const navigate = useNavigate();
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,10 +39,27 @@ function EditPage() {
   }, [calltokenbodega, getBodega, setValue]);
 
   const onSubmit = async (data) => {
-    const res = await calltokenbodega();
-    const databodega = await getBodega(res.data.id);
-    await updateBodega(databodega._id, data);
-    setShowSuccessMessage(true);
+    // Validar campos requeridos
+    const requiredFields = ["nombrebodega", "idDoc", "razonsocial", "ubicacion"];
+    const errors = {};
+    requiredFields.forEach(field => {
+      if (!data[field]) {
+        errors[field] = "Campo requerido";
+      }
+    });
+    setFormErrors(errors);
+
+    // Enviar formulario si no hay errores
+    if (Object.keys(errors).length === 0) {
+      try {
+        const res = await calltokenbodega();
+        const databodega = await getBodega(res.data.id);
+        await updateBodega(databodega._id, data);
+        setShowSuccessMessage(true);
+      } catch (error) {
+        console.error("Error updating bodega:", error);
+      }
+    }
   };
 
   const closeMessage = () => {
@@ -52,10 +70,10 @@ function EditPage() {
     setShowConfirmation(true);
   };
 
-  const handleConfirmDelete = () => {
-    // Aquí iría la lógica para eliminar la bodega
-    // Esta función se llamaría al confirmar la eliminación
-    // Por ahora, solo se muestra el mensaje de confirmación
+  const handleConfirmDelete = async () => {
+    const res = await calltokenbodega();
+    const databodega = await getBodega(res.data.id);
+    await deleteBodega(databodega._id)
     setShowConfirmation(false);
     Cookies.remove("tokenbodega");
     navigate("/mainmenu");
@@ -84,36 +102,46 @@ function EditPage() {
         <label>Nombre de la bodega</label>
         <input
           type="text"
-          {...register("nombrebodega", { required: true })}
+          {...register("nombrebodega")}
+          defaultValue={bodegadata.nombrebodega || ""}
           className="registro-inputs"
         />
         {errors.nombrebodega && (
           <p className="error-message">Campo requerido</p>
         )}
+        {formErrors.nombrebodega && (
+          <p className="error-message">{formErrors.nombrebodega}</p>
+        )}
 
         <label>Documento de la bodega</label>
         <input
           type="text"
-          {...register("idDoc", { required: true })}
+          {...register("idDoc")}
+          defaultValue={bodegadata.idDoc || ""}
           className="registro-inputs"
         />
         {errors.idDoc && <p className="error-message">Campo requerido</p>}
+        {formErrors.idDoc && <p className="error-message">{formErrors.idDoc}</p>}
 
         <label>Razon Social</label>
         <input
           type="text"
-          {...register("razonsocial", { required: true })}
+          {...register("razonsocial")}
+          defaultValue={bodegadata.razonsocial || ""}
           className="registro-inputs"
         />
         {errors.razonsocial && <p className="error-message">Campo requerido</p>}
+        {formErrors.razonsocial && <p className="error-message">{formErrors.razonsocial}</p>}
 
         <label>Direccion de la bodega</label>
         <input
           type="text"
-          {...register("ubicacion", { required: true })}
+          {...register("ubicacion")}
+          defaultValue={bodegadata.ubicacion || ""}
           className="registro-inputs"
         />
         {errors.ubicacion && <p className="error-message">Campo requerido</p>}
+        {formErrors.ubicacion && <p className="error-message">{formErrors.ubicacion}</p>}
         <div className="audio-recorder">
           <AudioRecorder />
         </div>
