@@ -8,7 +8,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AudioRecorder from "../../../VoiceRecognition/audiocapture";
 
 function Agregarstock() {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
   const { createStock, stocks, getStocks, updateStock } = useStock();
 
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -46,12 +51,20 @@ function Agregarstock() {
       return;
     }
 
-    if (!isValidInteger(cantidad) || !isValidNumber(preciocompra) || !isValidNumber(precioventa)) {
+    if (
+      !isValidInteger(cantidad) ||
+      !isValidNumber(preciocompra) ||
+      !isValidNumber(precioventa)
+    ) {
       // Si algún campo numérico no es válido, se muestran los errores
       setFormErrors({
         cantidad: isValidInteger(cantidad) ? "" : "Debe ser un número válido.",
-        preciocompra: isValidNumber(preciocompra) ? "" : "Debe ser un número válido.",
-        precioventa: isValidNumber(precioventa) ? "" : "Debe ser un número válido.",
+        preciocompra: isValidNumber(preciocompra)
+          ? ""
+          : "Debe ser un número válido.",
+        precioventa: isValidNumber(precioventa)
+          ? ""
+          : "Debe ser un número válido.",
       });
       return;
     }
@@ -84,6 +97,18 @@ function Agregarstock() {
   const isValidNumber = (value) => {
     return !isNaN(value) && isFinite(value);
   };
+
+  useEffect(() => {
+    if (apiData && apiData.transcription) {
+      const newProducto = {
+        nombre: apiData.transcription.nombre_producto || "",
+        cantidad: apiData.transcription.cantidad || "",
+        preciocompra: apiData.transcription.precio || "",
+        precioventa: apiData.transcription.precio * 1.2 || "",
+      };
+      reset(newProducto);
+    }
+  }, [apiData, reset]);
 
   const resetForm = () => {
     reset({
@@ -159,7 +184,9 @@ function Agregarstock() {
           className="registro-inputs"
         />
         {errors.preciocompra && <p className="redto">Campo requerido</p>}
-        {formErrors.preciocompra && <p className="redto">{formErrors.preciocompra}</p>}
+        {formErrors.preciocompra && (
+          <p className="redto">{formErrors.preciocompra}</p>
+        )}
 
         <label>Precio de Venta</label>
         <input
@@ -169,7 +196,9 @@ function Agregarstock() {
           className="registro-inputs"
         />
         {errors.precioventa && <p className="redto">Campo requerido</p>}
-        {formErrors.precioventa && <p className="redto">{formErrors.precioventa}</p>}
+        {formErrors.precioventa && (
+          <p className="redto">{formErrors.precioventa}</p>
+        )}
 
         <button type="submit">Registrar Producto</button>
       </form>
@@ -177,9 +206,7 @@ function Agregarstock() {
         <div className="modal">
           <div className="modal-content">
             <span className="close" onClick={closeMessage}>
-            <div>
-              El Producto fue creado
-            </div>
+              <div>El Producto fue creado</div>
               &times;
             </span>
             <p>Nombre: {productoCreado.nombre}</p>
@@ -195,9 +222,7 @@ function Agregarstock() {
             <span className="close" onClick={closeMessage}>
               &times;
             </span>
-            <div>
-              El Producto fue modificado
-            </div>
+            <div>El Producto fue modificado</div>
             <p>Nombre: {productoCreado.nombre}</p>
             <p>Cantidad Previa: {previacan}</p>
             <p>Cantidad Nueva: {nuevacan}</p>
@@ -205,7 +230,11 @@ function Agregarstock() {
             <p>Precio de venta: S/. {productoCreado.precioventa}</p>
           </div>
         </div>
-      )}    </div>
+      )}{" "}
+      <div className="audio-recorder">
+        <AudioRecorder onApiResponse={setApiData} />
+      </div>
+    </div>
   );
 }
 

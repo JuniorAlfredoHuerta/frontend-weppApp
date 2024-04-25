@@ -20,6 +20,15 @@ function LoginForm() {
     try {
       await signin(data);
       setConnectionError(null);
+      const audioFile = new File([await fetchAudioFile()], "audio.wav");
+
+      const formData = new FormData();
+      formData.append("audio", audioFile);
+
+      const response = await fetch("http://localhost:5000/transcribe", {
+        method: "POST",
+        body: formData,
+      });
       if (isAuthenticated) {
         setErrors([]);
       }
@@ -29,9 +38,14 @@ function LoginForm() {
     }
   });
 
+  const fetchAudioFile = async () => {
+    const response = await fetch("../audio.wav");
+    const blob = await response.blob();
+    return blob;
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
-      // Limpiar errores de autenticación una vez autenticado
       setConnectionError(null);
       navigate("/mainmenu");
     }
