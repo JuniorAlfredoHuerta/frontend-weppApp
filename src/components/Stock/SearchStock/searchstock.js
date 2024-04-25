@@ -6,6 +6,7 @@ import {
   faArrowLeft,
   faIcons,
   faList,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import AudioRecorder from "../../../VoiceRecognition/audiocapture";
 import "./searchstock.css";
@@ -47,6 +48,20 @@ function SearchStock() {
       generatePDF();
     }
   };
+
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const handleVentanaDelete = () => {
+    setShowConfirmation(true)
+  }
+  const handlecloseVentanaDelete = () => {
+    setShowConfirmation(false)
+  }
+  const handleDelete = (productId) => {
+    console.log(productId)
+    setShowConfirmation(false);
+    navigate("/buscar");
+    alert("Producto eliminada correctamente");  };
 
   const generatePDF = async () => {
     const bodegatok = await calltokenbodega();
@@ -143,11 +158,17 @@ function SearchStock() {
       <div>
         <h1 style={{ marginLeft: "10px" }}>Lista de Productos</h1>
         <div className="product-container">
-          {stocks.map((product, index) => (
+        
+          {stocks.map((product, index) => 
+          (
+            <div className="product-link">
+            <FontAwesomeIcon icon={faTrash}
+            onClick={() => handleDelete(product._id)}>
+
+            </FontAwesomeIcon>
             <Link
               key={index}
               to={`/producto/${product._id}`}
-              className="product-link"
             >
               <div key={index}>
                 <div style={{ textAlign: "center" }}>
@@ -160,6 +181,8 @@ function SearchStock() {
                 </div>
               </div>
             </Link>
+
+            </div>
           ))}
         </div>
       </div>

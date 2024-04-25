@@ -4,6 +4,7 @@ import {
   getStockRequest,
   updateStockRequest,
   getStocksRequest,
+  deleteStockRequest,
 } from "../../api/stock";
 
 const stockContext = createContext();
@@ -51,9 +52,19 @@ export const StockProvider = ({ children }) => {
       console.error(error);
     }
   };
+
+  const deleteStock = async (id, stock) => {
+    try {
+      //console.log(id, stock);
+      await deleteStockRequest(id, stock);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <stockContext.Provider
-      value={{ stocks, createStock, updateStock, getStocks, getStock }}
+      value={{ stocks, createStock, updateStock, getStocks, getStock ,deleteStock}}
     >
       {children}
     </stockContext.Provider>

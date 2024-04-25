@@ -206,9 +206,9 @@ function Agregarstock() {
         <div className="modal">
           <div className="modal-content">
             <span className="close" onClick={closeMessage}>
-              <div>El Producto fue creado</div>
               &times;
             </span>
+            <div className="texto-grande">El Producto fue creado</div>
             <p>Nombre: {productoCreado.nombre}</p>
             <p>Cantidad: {productoCreado.cantidad}</p>
             <p>Precio de compra: S/. {productoCreado.preciocompra}</p>
@@ -222,7 +222,7 @@ function Agregarstock() {
             <span className="close" onClick={closeMessage}>
               &times;
             </span>
-            <div>El Producto fue modificado</div>
+            <div className="texto-grande" >El Producto fue modificado</div>
             <p>Nombre: {productoCreado.nombre}</p>
             <p>Cantidad Previa: {previacan}</p>
             <p>Cantidad Nueva: {nuevacan}</p>

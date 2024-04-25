@@ -134,6 +134,7 @@ button:hover {
   flex-wrap: wrap;
   justify-content: space-between;
 }
+
 .product-link {
   width: calc(50% - 10px); /* Ancho del 50% con espacio entre los elementos */
   padding: 10px;
@@ -162,7 +163,15 @@ button:hover {
 }
 
 .texto-grande {
-  font-size: 20px; /* Tamaño de la letra: 20px */
-  font-weight: bold; /* Hacer la letra negrita */
+  font-size: 20px; 
+  font-weight: bold; 
   margin-bottom: 5px;
+}
+
+.delete-button {
+  position: absolute;
+  top: 5px; /* Ajusta la posición vertical del botón */
+  left: 5px; /* Ajusta la posición horizontal del botón para que esté en la parte izquierda */
+  font-size: smaller; /* Reduce el tamaño del texto del botón */
+  padding: 5px 8px; /* Ajusta el padding para que el botón sea más pequeño */
 }

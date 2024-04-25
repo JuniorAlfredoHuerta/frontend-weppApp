@@ -109,15 +109,14 @@ function MainMenu() {
             id: bodegadeltoken.data.id,
             nombre: bodegadeltoken.data.nombre,
           });
-          // Realiza aquí las operaciones que necesites con bodegadeltoken
+        
         } catch (error) {
-          //console.error("Error al obtener la información de la bodega:", error);
+
         }
       } else {
-        //console.log("No hay token");
       }
     };
-    fetchData(); // Llamada a la función asincrónica
+    fetchData(); 
   }, [calltokenbodega]);
 
   const handleSelectChange = async (event) => {
@@ -125,7 +124,6 @@ function MainMenu() {
     const selectedNombre = bodegas.find(
       (bodega) => bodega._id === selectedId
     ).nombrebodega;
-    //console.log(selectedId);
     await gettokenbodega(selectedId);
 
     try {
@@ -136,9 +134,7 @@ function MainMenu() {
       //const cookies = Cookies.get();
       //console.log(cookies.tokenbodega);
 
-      // Realiza otras operaciones con la respuesta (res) si es necesario
-
-      // Llamada a gettokenbodega para actualizar el token
+   
     } catch (error) {
       //console.error("Error al obtener la información de la bodega:", error);
     }

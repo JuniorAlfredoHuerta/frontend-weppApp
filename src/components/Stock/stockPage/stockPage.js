@@ -106,7 +106,7 @@ function StockPage() {
         <input
   type="text"
   {...register("nombre", { required: true })}
-  value={producto.nombre || ""} // Asegura que el valor inicial sea una cadena vacía
+  value={producto.nombre || ""}
   className="registro-inputs"
   onChange={handleChange}
 ></input>
