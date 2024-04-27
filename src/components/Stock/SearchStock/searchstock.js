@@ -16,7 +16,7 @@ import { useBodega } from "../../context/BodegaContext";
 import Cookies from "js-cookie";
 
 function SearchStock() {
-  const { getStocks, stocks } = useStock();
+  const { getStocks, stocks, deleteStock } = useStock();
   const [apiData, setApiData] = useState(null);
   const { logout, user } = useAuth();
 
@@ -33,7 +33,7 @@ function SearchStock() {
   };
   useEffect(() => {
     getStocks();
-  }, []);
+  }, [getStocks]);
 
   const handleApiResponse = (data) => {
     setApiData(data);
@@ -51,17 +51,23 @@ function SearchStock() {
 
   const [showConfirmation, setShowConfirmation] = useState(false);
 
-  const handleVentanaDelete = () => {
-    setShowConfirmation(true)
-  }
+  const handleVentanaDelete = (productname, productId) => {
+    setselectedProduct(productname);
+    setselectedProductid(productId);
+
+    setShowConfirmation(true);
+  };
   const handlecloseVentanaDelete = () => {
-    setShowConfirmation(false)
-  }
-  const handleDelete = (productId) => {
-    console.log(productId)
+    setShowConfirmation(false);
+  };
+  const handleDelete = async (productId) => {
+    await deleteStock(productId);
     setShowConfirmation(false);
     navigate("/buscar");
-    alert("Producto eliminada correctamente");  };
+  };
+
+  const [selectedProduct, setselectedProduct] = useState(false);
+  const [selectedProductid, setselectedProductid] = useState(false);
 
   const generatePDF = async () => {
     const bodegatok = await calltokenbodega();
@@ -158,33 +164,48 @@ function SearchStock() {
       <div>
         <h1 style={{ marginLeft: "10px" }}>Lista de Productos</h1>
         <div className="product-container">
-        
-          {stocks.map((product, index) => 
-          (
-            <div className="product-link">
-            <FontAwesomeIcon icon={faTrash}
-            onClick={() => handleDelete(product._id)}>
-
-            </FontAwesomeIcon>
-            <Link
-              key={index}
-              to={`/producto/${product._id}`}
-            >
-              <div key={index}>
-                <div style={{ textAlign: "center" }}>
-                  <FontAwesomeIcon
-                    icon={faIcons}
-                    style={{ marginBottom: "10px" }}
-                  />
-                  <div className="textname">Nombre: {product.nombre}</div>
-                  <div className="textname">Cantidad: {product.cantidad}</div>
+          {stocks.map((product, index) => (
+            <div className="product-link" key={index}>
+              <FontAwesomeIcon
+                icon={faTrash}
+                onClick={() => handleVentanaDelete(product.nombre, product._id)}
+              />
+              <Link to={`/producto/${product._id}`}>
+                <div>
+                  <div style={{ textAlign: "center" }}>
+                    <FontAwesomeIcon
+                      icon={faIcons}
+                      style={{ marginBottom: "10px" }}
+                    />
+                    <div className="textname">Nombre: {product.nombre}</div>
+                    <div className="textname">Cantidad: {product.cantidad}</div>
+                  </div>
                 </div>
-              </div>
-            </Link>
-
+              </Link>
             </div>
           ))}
         </div>
+
+        {showConfirmation && (
+          <div className="modal">
+            <div className="modal-content">
+              <div className="confirmation-modal">
+                <p>
+                  ¿Estás seguro de que quieres eliminar {selectedProduct} del
+                  registro?
+                </p>
+                <div className="button-container">
+                  <button onClick={() => handleDelete(selectedProductid)}>
+                    Sí, Eliminar
+                  </button>
+                  <button onClick={() => setShowConfirmation(false)}>
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       <button onClick={generatePDF}>Descargar PDF</button>
 

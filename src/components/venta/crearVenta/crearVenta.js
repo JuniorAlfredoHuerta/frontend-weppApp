@@ -42,6 +42,7 @@ function CreateVentaPage() {
     const product = stocksConCantidad.find(
       (product) => product.nombre === data.transcription.nombre_producto
     );
+
     const nuevoProducto = {
       _id: product._id,
       nombre: data.transcription.nombre_producto,
@@ -69,7 +70,7 @@ function CreateVentaPage() {
     setAppProductos(updatedProductos);
 
     // Agregar un console.log para verificar los datos actualizados
-    console.log("Datos del producto actualizados:", updatedProductos);
+    //console.log("Datos del producto actualizados:", updatedProductos);
     if (updatedProductos) {
     }
   };
@@ -93,13 +94,13 @@ function CreateVentaPage() {
     const stocktotupdate = appProductos.map(
       ({ nombre, precioVenta, total, ...rest }) => rest
     );
-    console.log(stocktotupdate);
+    //console.log(stocktotupdate);
     for (let i = 0; i < stocktotupdate.length; i++) {
       const stocktest = stocksConCantidad.find(
         (stocktest) => stocktest._id === stocktotupdate[i]._id
       );
 
-      console.log(stocktest);
+      //console.log(stocktest);
       const stockleft =
         parseInt(stocksConCantidad.cantidad) -
         parseInt(stocktotupdate[i].cantidad);

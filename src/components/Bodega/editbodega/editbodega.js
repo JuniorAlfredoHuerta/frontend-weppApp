@@ -16,7 +16,8 @@ function EditPage() {
     formState: { errors },
   } = useForm();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const { calltokenbodega, updateBodega, getBodega, deleteBodega } = useBodega();
+  const { calltokenbodega, updateBodega, getBodega, deleteBodega } =
+    useBodega();
   const [bodegadata, setBodegaData] = useState({});
   const [showConfirmation, setShowConfirmation] = useState(false);
   const navigate = useNavigate();
@@ -40,9 +41,14 @@ function EditPage() {
 
   const onSubmit = async (data) => {
     // Validar campos requeridos
-    const requiredFields = ["nombrebodega", "idDoc", "razonsocial", "ubicacion"];
+    const requiredFields = [
+      "nombrebodega",
+      "idDoc",
+      "razonsocial",
+      "ubicacion",
+    ];
     const errors = {};
-    requiredFields.forEach(field => {
+    requiredFields.forEach((field) => {
       if (!data[field]) {
         errors[field] = "Campo requerido";
       }
@@ -73,7 +79,7 @@ function EditPage() {
   const handleConfirmDelete = async () => {
     const res = await calltokenbodega();
     const databodega = await getBodega(res.data.id);
-    await deleteBodega(databodega._id)
+    await deleteBodega(databodega._id);
     setShowConfirmation(false);
     Cookies.remove("tokenbodega");
     navigate("/mainmenu");
@@ -121,7 +127,9 @@ function EditPage() {
           className="registro-inputs"
         />
         {errors.idDoc && <p className="error-message">Campo requerido</p>}
-        {formErrors.idDoc && <p className="error-message">{formErrors.idDoc}</p>}
+        {formErrors.idDoc && (
+          <p className="error-message">{formErrors.idDoc}</p>
+        )}
 
         <label>Razon Social</label>
         <input
@@ -131,7 +139,9 @@ function EditPage() {
           className="registro-inputs"
         />
         {errors.razonsocial && <p className="error-message">Campo requerido</p>}
-        {formErrors.razonsocial && <p className="error-message">{formErrors.razonsocial}</p>}
+        {formErrors.razonsocial && (
+          <p className="error-message">{formErrors.razonsocial}</p>
+        )}
 
         <label>Direccion de la bodega</label>
         <input
@@ -141,7 +151,9 @@ function EditPage() {
           className="registro-inputs"
         />
         {errors.ubicacion && <p className="error-message">Campo requerido</p>}
-        {formErrors.ubicacion && <p className="error-message">{formErrors.ubicacion}</p>}
+        {formErrors.ubicacion && (
+          <p className="error-message">{formErrors.ubicacion}</p>
+        )}
         <div className="audio-recorder">
           <AudioRecorder />
         </div>

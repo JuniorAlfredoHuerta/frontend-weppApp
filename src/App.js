@@ -1,14 +1,6 @@
 import React from "react";
-//import Dictaphone  from './components/add.js';
 import MainMenu from "./components/MainMenu";
-import {
-  BrowserRouter as Router,
-  Route,
-  useNavigate,
-  Link,
-  Routes,
-  BrowserRouter,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AgregarProducto from "./components/Stock/AddStock/AddProducto";
 import Login from "../src/components/login/login";
 import { AuthProvider } from "./components/context/AuthContext";
@@ -28,7 +20,6 @@ function App() {
   return (
     <AuthProvider>
       <BodegaProvider>
-
         <BrowserRouter>
           <StockProvider>
             <VentaProvider>

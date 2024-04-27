@@ -59,18 +59,18 @@ function SelectProducto({ onProductoChange, apiData }) {
       );
 
       setSelectedProduct(product._id);
-      console.log(apiData.transcription.cantidad);
-      console.log(apiData.transcription.precio);
+      //console.log(apiData.transcription.cantidad);
+      //console.log(apiData.transcription.precio);
       setCantidad(parseInt(apiData.transcription.cantidad));
       setPrecioVenta(parseFloat(apiData.transcription.precio));
       const totalapi =
         parseFloat(apiData.transcription.cantidad) *
         parseFloat(apiData.transcription.precio);
-      console.log(totalapi);
+      //console.log(totalapi);
       setTotal(totalapi);
       setNombre(apiData.transcription.nombre_producto);
 
-      console.log(selectedProduct);
+      //console.log(selectedProduct);
     }
   }, []);
 
@@ -86,9 +86,9 @@ function SelectProducto({ onProductoChange, apiData }) {
     }
   };
 
-  console.log(" Cantidad", cantidad);
-  console.log("precio", precioVenta);
-  console.log("total", total);
+  //console.log(" Cantidad", cantidad);
+  //console.log("precio", precioVenta);
+  //console.log("total", total);
   return (
     <div
       style={{

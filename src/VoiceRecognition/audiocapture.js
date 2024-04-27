@@ -75,7 +75,7 @@ const AudioRecorder = ({ onApiResponse }) => {
       }
 
       const data = await response.json();
-      //console.log(data);
+      console.log(data);
       onApiResponse(data);
     } catch (error) {
       console.error(error);

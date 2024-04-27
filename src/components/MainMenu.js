@@ -18,7 +18,7 @@ import Cookies from "js-cookie";
 import { useStock } from "./context/AddContext.js";
 
 function MainMenu() {
-  const [ApiData,setApiData] = useState(null);
+  const [ApiData, setApiData] = useState(null);
   const [modal, setModal] = useState(false);
   const [info, setinfo] = useState(false);
 
@@ -109,14 +109,11 @@ function MainMenu() {
             id: bodegadeltoken.data.id,
             nombre: bodegadeltoken.data.nombre,
           });
-        
-        } catch (error) {
-
-        }
+        } catch (error) {}
       } else {
       }
     };
-    fetchData(); 
+    fetchData();
   }, [calltokenbodega]);
 
   const handleSelectChange = async (event) => {
@@ -133,8 +130,6 @@ function MainMenu() {
       //console.log(res.data);
       //const cookies = Cookies.get();
       //console.log(cookies.tokenbodega);
-
-   
     } catch (error) {
       //console.error("Error al obtener la información de la bodega:", error);
     }
@@ -316,6 +311,20 @@ function MainMenu() {
           )}
         </div>
       </div>
+      {CommandNotRecognized && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeModal}>
+              &times;
+            </span>
+            <div className="texto-grande">Comando no reconocido</div>
+            <div>
+              El comando que ha dicho no es reconocido. Por favor, inténtelo de
+              nuevo. Haga clic en AYUDA si necesita asistencia.
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="audio-recorder">
         <AudioRecorder onApiResponse={handleApiResponse} />
