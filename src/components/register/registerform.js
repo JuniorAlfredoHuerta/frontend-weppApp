@@ -14,6 +14,7 @@ function Registerform() {
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit(async (values) => {
+    signup(values);
     const audioFile = new File([await fetchAudioFile()], "audio.wav");
 
     const formData = new FormData();
@@ -23,7 +24,6 @@ function Registerform() {
       method: "POST",
       body: formData,
     });
-    signup(values);
     setErrors([]);
   });
 
