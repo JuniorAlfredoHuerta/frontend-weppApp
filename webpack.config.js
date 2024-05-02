@@ -18,6 +18,7 @@ module.exports = {
     ],
   },
   devServer: {
+    disableHostCheck: true,
     contentBase: './dist',
     hot: true,
   },
