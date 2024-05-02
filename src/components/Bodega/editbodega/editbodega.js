@@ -55,7 +55,6 @@ function EditPage() {
     });
     setFormErrors(errors);
 
-    // Enviar formulario si no hay errores
     if (Object.keys(errors).length === 0) {
       try {
         const res = await calltokenbodega();
