@@ -28,7 +28,7 @@ function Agregarstock() {
 
   useEffect(() => {
     getStocks();
-  }, [stocks]);
+  }, []);
 
   const openInfo = () => {
     setInfo(true);

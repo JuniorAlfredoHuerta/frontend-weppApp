@@ -96,14 +96,19 @@ function CreateVentaPage() {
     );
     //console.log(stocktotupdate);
     for (let i = 0; i < stocktotupdate.length; i++) {
-      const stocktest = stocksConCantidad.find(
+      const stocktest = stocktotupdate.find(
         (stocktest) => stocktest._id === stocktotupdate[i]._id
       );
+      const realstock = stocks.find(
+        (realstock) => realstock._id == stocktotupdate[i]._id
+      )
 
-      //console.log(stocktest);
+      //console.log(stocks)
+      //console.log(realstock.cantidad)
+      //console.log(stocktest.cantidad);
       const stockleft =
-        parseInt(stocksConCantidad.cantidad) -
-        parseInt(stocktotupdate[i].cantidad);
+        parseInt(realstock.cantidad) -
+        parseInt(stocktest.cantidad);
       updateStock(stocktotupdate[i]._id, { cantidad: stockleft });
     }
     createVenta(nuevoFormato);

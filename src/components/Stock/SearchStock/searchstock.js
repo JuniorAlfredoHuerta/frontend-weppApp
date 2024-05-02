@@ -33,7 +33,7 @@ function SearchStock() {
   };
   useEffect(() => {
     getStocks();
-  }, [getStocks]);
+  }, []);
 
   const handleApiResponse = (data) => {
     setApiData(data);

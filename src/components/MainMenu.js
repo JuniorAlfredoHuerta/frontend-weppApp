@@ -18,6 +18,7 @@ import Cookies from "js-cookie";
 import { useStock } from "./context/AddContext.js";
 
 function MainMenu() {
+
   const [ApiData, setApiData] = useState(null);
   const [modal, setModal] = useState(false);
   const [info, setinfo] = useState(false);
@@ -125,7 +126,7 @@ function MainMenu() {
 
     try {
       setSelectedBodega({ id: selectedId, nombre: selectedNombre });
-
+      window.location.reload()
       //const res = await calltokenbodega();
       //console.log(res.data);
       //const cookies = Cookies.get();

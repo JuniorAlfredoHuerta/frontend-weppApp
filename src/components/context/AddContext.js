@@ -44,6 +44,7 @@ export const StockProvider = ({ children }) => {
     const res = await createstockRequest(stock);
     console.log(res);
   };
+  
   const updateStock = async (id, stock) => {
     try {
       //console.log(id, stock);
