@@ -33,8 +33,7 @@
     "webm-to-wav-converter": "^1.1.0"
   },
   "scripts": {
-    "start": "webpack serve --open",
-    
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
