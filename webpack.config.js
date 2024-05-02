@@ -1,9 +1,9 @@
-const path = require('path');
+const path = require('/src');
 
 module.exports = {
   entry: './src/index.js', // Ajusta esto a la entrada de tu aplicación
   output: {
-    filename: 'main.js',
+    filename: 'App.js',
     path: path.resolve(__dirname, 'dist'),
   },
   module: {
