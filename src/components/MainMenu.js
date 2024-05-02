@@ -27,20 +27,20 @@ function MainMenu() {
   const { getStocks, stocks } = useStock();
   const [CommandNotRecognized, setCommandNotRecognized] = useState(false);
 
+  const fetchStocks = async () => {
+    const tokenBodega = Cookies.get("tokenbodega");
+    if (tokenBodega) {
+      await getStocks();
+    }
+  };
   useEffect(() => {
-    const fetchStocks = async () => {
-      const tokenBodega = Cookies.get("tokenbodega");
-      if (tokenBodega) {
-        await getStocks();
-      }
-    };
 
     fetchStocks();
-  }, [getStocks]);
+  }, []);
 
   useEffect(() => {
     getBodegas();
-  }, [getBodegas]);
+  }, []);
 
   const handleApiResponse = (data) => {
     setApiData(data);

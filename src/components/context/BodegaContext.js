@@ -47,6 +47,7 @@ export const BodegaProvider = ({ children }) => {
     try {
       //console.log(id);
       const res = await tokenBodega({ bodega: id });
+      Cookies.set("tokenbodega" , res.data.tokenbodega)
       //console.log(res.data);
     } catch (err) {
       //console.log(err);
