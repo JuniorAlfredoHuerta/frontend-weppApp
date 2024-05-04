@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./register.css";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
@@ -7,24 +7,32 @@ function Registerform() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors: formErrors },
   } = useForm();
 
-  const { signup, isAuthenticated, errors: Autherrors, setErrors } = useAuth();
+  const { signup, isAuthenticated, errors: authErrors, setErrors } = useAuth();
   const navigate = useNavigate();
+  const [connectionError, setConnectionError] = useState(null);
 
   const onSubmit = handleSubmit(async (values) => {
-    signup(values);
-    const audioFile = new File([await fetchAudioFile()], "audio.wav");
+    try {
+      signup(values);
+      const audioFile = new File([await fetchAudioFile()], "audio.wav");
 
-    const formData = new FormData();
-    formData.append("audio", audioFile);
+      const formData = new FormData();
+      formData.append("audio", audioFile);
 
-    const response = await fetch("http://localhost:5000/transcribe", {
-      method: "POST",
-      body: formData,
-    });
-    setErrors([]);
+      const response = await fetch("http://localhost:5000/transcribe", {
+        method: "POST",
+        body: formData,
+      });
+      if (isAuthenticated) {
+        setErrors([]);
+      }
+    } catch (error) {
+      console.error("Error de conexión:", error.message);
+      setConnectionError("No se pudo establecer la conexión con el servidor");
+    }
   });
 
   const fetchAudioFile = async () => {
@@ -35,17 +43,22 @@ function Registerform() {
 
   useEffect(() => {
     if (isAuthenticated) {
+      setConnectionError(null);
       navigate("/mainmenu");
+      window.location.reload();
     }
   }, [isAuthenticated, navigate]);
 
   return (
     <div className="menu-container">
-      {Autherrors.map((error, i) => (
-        <div className="errormessage" key={i}>
-          {error}
+      {connectionError && <div className="errormessage">{connectionError}</div>}
+      {authErrors.length > 0 && (
+        <div className="errormessage">
+          {authErrors.map((error, i) => (
+            <p key={i}>{error}</p>
+          ))}
         </div>
-      ))}
+      )}
       <form onSubmit={onSubmit}>
         <input
           type="text"
@@ -53,21 +66,21 @@ function Registerform() {
           placeholder="Usuario"
           className="registro-inputs"
         />
-        {errors.username && <p className="redto">Usuario requerido</p>}
+        {formErrors.username && <p className="redto">Usuario requerido</p>}
         <input
           type="email"
           {...register("correo", { required: true })}
           placeholder="Correo electronico"
           className="registro-inputs"
         />
-        {errors.correo && <p className="redto">Correo requerido</p>}
+        {formErrors.correo && <p className="redto">Correo requerido</p>}
         <input
           type="password"
           {...register("password", { required: true })}
           placeholder="Contraseña"
           className="registro-inputs"
         />
-        {errors.password && <p className="redto">Contraseña requerida</p>}
+        {formErrors.password && <p className="redto">Contraseña requerida</p>}
         <button type="submit">Registrarse</button>
       </form>
     </div>

@@ -40,12 +40,19 @@ function SearchStock() {
     const foundProduct = stocks.find(
       (product) => product.nombre === data.transcription.nombre_producto
     );
-    if (foundProduct) {
-      const idproducto = foundProduct._id;
-      navigate(`/producto/${idproducto}`);
-    }
-    if (data.transcription.comando === "descargar") {
+    console.log(foundProduct);
+    if (data.transcription.comando === "eliminar") {
+      console.log("ESTO SE ELIMINAR");
+      if (foundProduct) {
+        handleVentanaDelete(foundProduct.nombre, foundProduct._id);
+      }
+    } else if (data.transcription.comando === "descargar") {
       generatePDF();
+    } else {
+      if (foundProduct) {
+        const idproducto = foundProduct._id;
+        navigate(`/producto/${idproducto}`);
+      }
     }
   };
 
@@ -63,7 +70,7 @@ function SearchStock() {
   const handleDelete = async (productId) => {
     await deleteStock(productId);
     setShowConfirmation(false);
-    navigate("/buscar");
+    window.location.href = "/buscar";
   };
 
   const [selectedProduct, setselectedProduct] = useState(false);

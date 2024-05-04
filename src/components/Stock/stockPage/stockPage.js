@@ -1,16 +1,16 @@
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useStock } from "../../context/AddContext";
-import React, { useEffect, useState } from "react";
-import "./stockPage.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import AudioRecorder from "../../../VoiceRecognition/audiocapture";
+import { faArrowLeft, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useForm } from "react-hook-form";
+import { useStock } from "../../context/AddContext";
+import AudioRecorder from "../../../VoiceRecognition/audiocapture";
+import "./stockPage.css";
 
 function StockPage() {
-  const { register, handleSubmit, reset, setValue } = useForm(); // Agrega setValue
   const { id } = useParams();
-  const { stocks, getStock, updateStock } = useStock();
+  const { getStock, updateStock, deleteStock } = useStock();
+  const { register, handleSubmit, setValue } = useForm();
   const [producto, setProducto] = useState({});
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [info, setInfo] = useState(false);
@@ -21,11 +21,11 @@ function StockPage() {
         const res = await getStock(id);
         setProducto(res);
         // Actualiza los valores del formulario cuando se obtiene el producto
-        setValue("nombre", res.nombre);
-        setValue("cantidad", res.cantidad);
-        setValue("preciocompra", res.preciocompra);
-        setValue("precioventa", res.precioventa);
-        setValue("ubicacion", res.ubicacion);
+        setValue("nombre", res.nombre || "");
+        setValue("cantidad", res.cantidad || "");
+        setValue("preciocompra", res.preciocompra || "");
+        setValue("precioventa", res.precioventa || "");
+        setValue("ubicacion", res.ubicacion || "");
       } catch (error) {
         console.error("Error fetching product:", error);
       }
@@ -36,28 +36,36 @@ function StockPage() {
     }
   }, [id, getStock, setValue]);
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = async (data) => {
+    console.log(data);
     await updateStock(id, data);
     setShowSuccessMessage(true);
     setTimeout(() => {
       setShowSuccessMessage(false);
     }, 3000);
-  });
+  };
 
   const handleApiResponse = (data) => {
-    // Actualiza el estado del producto con los datos de la API
-    setProducto((prevProducto) => ({
-      ...prevProducto,
-      cantidad: parseInt(prevProducto.cantidad) + parseInt(data.transcription.cantidad),
-    }));
+    if (data.transcription.comando === "eliminar") {
+      handleDelete();
+    } else {
+      const cantidadToAdd = parseInt(data.transcription.cantidad);
+      setProducto((prevProducto) => ({
+        ...prevProducto,
+        cantidad: parseInt(prevProducto.cantidad) + cantidadToAdd,
+      }));
+
+      // Actualizar el valor del campo "cantidad" en el formulario
+      setValue("cantidad", producto.cantidad + cantidadToAdd);
+    }
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProducto({
-      ...producto,
+    setProducto((prevProducto) => ({
+      ...prevProducto,
       [name]: value,
-    });
+    }));
   };
 
   const openInfo = () => {
@@ -70,6 +78,13 @@ function StockPage() {
 
   const closeMessage = () => {
     setShowSuccessMessage(false);
+  };
+
+  const handleDelete = async () => {
+    if (window.confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+      await deleteStock(id);
+      window.location.href = "/buscar";
+    }
   };
 
   return (
@@ -85,6 +100,9 @@ function StockPage() {
           </div>
         </Link>
       </nav>
+      <div className="menu-button trash-button" onClick={handleDelete}>
+        <FontAwesomeIcon icon={faTrash} />
+      </div>
       {info && (
         <div className="modal">
           <div className="modal-content">
@@ -92,7 +110,7 @@ function StockPage() {
               &times;
             </span>{" "}
             <div className="texto-grande">
-              Los comandos de voz para esta pagina son:
+              Los comandos de voz para esta página son:
             </div>
             <div className="texto-grande">Añadir "Cantidad"</div>
             <div>Añade la cantidad dicha al stock</div>
@@ -100,25 +118,26 @@ function StockPage() {
           </div>
         </div>
       )}
-      <form onSubmit={onSubmit} className="form-css">
-        <h3> Actualiza los datos del producto</h3>
+      <form onSubmit={handleSubmit(onSubmit)} className="form-css">
+        <h3>Actualizar los datos del producto</h3>
         <label>Nombre del producto</label>
         <input
-  type="text"
-  {...register("nombre", { required: true })}
-  value={producto.nombre || ""}
-  className="registro-inputs"
-  onChange={handleChange}
-></input>
+          type="text"
+          {...register("nombre", { required: true })}
+          value={producto.nombre || ""}
+          className="registro-inputs"
+          onChange={handleChange}
+        />
 
-        <label>Cantidad en el almacen</label>
+        <label>Cantidad en el almacén</label>
         <input
           type="text"
           {...register("cantidad", { required: true })}
           value={producto.cantidad || ""}
           className="registro-inputs"
           onChange={handleChange}
-        ></input>
+        />
+
         <label>Precio de compra</label>
         <input
           type="text"
@@ -126,7 +145,8 @@ function StockPage() {
           value={producto.preciocompra || ""}
           className="registro-inputs"
           onChange={handleChange}
-        ></input>
+        />
+
         <label>Precio de venta</label>
         <input
           type="text"
@@ -134,17 +154,20 @@ function StockPage() {
           value={producto.precioventa || ""}
           className="registro-inputs"
           onChange={handleChange}
-        ></input>
-        <label>Ubicacion del producto</label>
+        />
+
+        <label>Ubicación del producto</label>
         <input
           type="text"
           {...register("ubicacion")}
           value={producto.ubicacion || ""}
           className="registro-inputs"
           onChange={handleChange}
-        ></input>
+        />
+
         <button type="submit">Actualizar</button>
       </form>
+
       {showSuccessMessage && (
         <div className="success-message">
           <span className="close" onClick={closeMessage}>

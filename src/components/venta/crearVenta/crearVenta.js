@@ -100,15 +100,14 @@ function CreateVentaPage() {
         (stocktest) => stocktest._id === stocktotupdate[i]._id
       );
       const realstock = stocks.find(
-        (realstock) => realstock._id == stocktotupdate[i]._id
-      )
+        (realstock) => realstock._id === stocktotupdate[i]._id
+      );
 
       //console.log(stocks)
       //console.log(realstock.cantidad)
       //console.log(stocktest.cantidad);
       const stockleft =
-        parseInt(realstock.cantidad) -
-        parseInt(stocktest.cantidad);
+        parseInt(realstock.cantidad) - parseInt(stocktest.cantidad);
       updateStock(stocktotupdate[i]._id, { cantidad: stockleft });
     }
     createVenta(nuevoFormato);

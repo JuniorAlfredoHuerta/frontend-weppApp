@@ -25,6 +25,9 @@ export const AuthProvider = ({ children }) => {
   const signup = async (user) => {
     try {
       const res = await registerRequest(user);
+
+      Cookies.set("token", res.data.token);
+
       setUser(res.data);
       setIsAuthenticated(true);
       setErrors([]);
@@ -41,7 +44,7 @@ export const AuthProvider = ({ children }) => {
   const signin = async (user) => {
     try {
       const res = await loginRequest(user);
-      Cookies.set("token" ,res.data.token)
+      Cookies.set("token", res.data.token);
 
       setUser(res.data);
       setIsAuthenticated(true);
@@ -75,8 +78,8 @@ export const AuthProvider = ({ children }) => {
 
   const checkLogin = async () => {
     const cookies = Cookies.get();
-    console.log(cookies)
-    const cookiedata  = cookies.token
+    console.log(cookies);
+    const cookiedata = cookies.token;
     if (!cookies.token) {
       setIsAuthenticated(false);
       setLoading(false);
@@ -85,7 +88,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const res = await verifyTokenRequest();
-      console.log('res',res);
+      console.log("res", res);
       if (!res.data) {
         console.log("NO HAY TOKKEN VOLVIENDO AL iNICIO");
 

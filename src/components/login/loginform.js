@@ -25,7 +25,8 @@ function LoginForm() {
       const formData = new FormData();
       formData.append("audio", audioFile);
 
-      const response = await fetch("https://apimodelo-production.up.railway.app/transcribe", {
+      //const response = await fetch("https://apimodelo-production.up.railway.app/transcribe", {
+      const response = await fetch("http://localhost:5000/transcribe", {
         method: "POST",
         body: formData,
       });
@@ -48,7 +49,7 @@ function LoginForm() {
     if (isAuthenticated) {
       setConnectionError(null);
       navigate("/mainmenu");
-      window.location.reload()
+      window.location.reload();
     }
   }, [isAuthenticated, navigate]);
 
