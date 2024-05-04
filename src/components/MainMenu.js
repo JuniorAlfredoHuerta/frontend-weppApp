@@ -18,7 +18,6 @@ import Cookies from "js-cookie";
 import { useStock } from "./context/AddContext.js";
 
 function MainMenu() {
-
   const [ApiData, setApiData] = useState(null);
   const [modal, setModal] = useState(false);
   const [info, setinfo] = useState(false);
@@ -35,7 +34,6 @@ function MainMenu() {
     }
   };
   useEffect(() => {
-
     fetchStocks();
   }, []);
 
@@ -45,6 +43,7 @@ function MainMenu() {
 
   const handleApiResponse = (data) => {
     setApiData(data);
+    console.log(ApiData);
     if (Cookies.get("tokenbodega")) {
       const { transcription } = data;
       if (transcription) {
@@ -126,7 +125,7 @@ function MainMenu() {
 
     try {
       setSelectedBodega({ id: selectedId, nombre: selectedNombre });
-      window.location.reload()
+      window.location.reload();
       //const res = await calltokenbodega();
       //console.log(res.data);
       //const cookies = Cookies.get();
@@ -176,7 +175,7 @@ function MainMenu() {
               <div className="texto-grande">Agregar</div>
               <div>Ve a la pestaña de agregar producto</div>
               <div className="texto-grande">Buscar:</div>
-              <div>Ve a la ventana de vender producto</div>
+              <div>Ve a la ventana de lista de productos</div>
               <div className="texto-grande">Producto: "Nombre" </div>
               <div>Ve a la pestaña de detalle de ese producto </div>
               <div className="texto-grande">Vender: </div>

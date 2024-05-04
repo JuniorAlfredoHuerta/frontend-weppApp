@@ -161,8 +161,10 @@ function SearchStock() {
             <div className="texto-grande">
               Los comandos de voz para esta pagina son:
             </div>
+            <div className="texto-grande">Producto"</div>
             <div className="texto-grande">"Nombre del Producto"</div>
-            <div>Te dirije al detalle producto que deseas buscar</div>
+            <div>Te dirije al detalle producto que deseas buscar</div>{" "}
+            <div>Ejemplo: Producto Inca Kola de 500 ml</div>
             <div className="texto-grande">Descagar</div>
             <div>Descarga el detalle del INVENTARIO como formato PDF</div>
           </div>

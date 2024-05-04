@@ -100,12 +100,16 @@ function Agregarstock() {
 
   useEffect(() => {
     if (apiData && apiData.transcription) {
+      const precioCompra = apiData.transcription.precio || 0;
+      const precioVenta = parseFloat((precioCompra * 1.2).toFixed(2));
+
       const newProducto = {
         nombre: apiData.transcription.nombre_producto || "",
         cantidad: apiData.transcription.cantidad || "",
-        preciocompra: apiData.transcription.precio || "",
-        precioventa: apiData.transcription.precio * 1.2 || "",
+        preciocompra: precioCompra.toFixed(2),
+        precioventa: precioVenta.toFixed(2),
       };
+
       reset(newProducto);
     }
   }, [apiData, reset]);
@@ -148,11 +152,12 @@ function Agregarstock() {
             </div>
             <div className="texto-grande">Compre + </div>
             <div className="texto-grande">"Cantidad numerica " + </div>
+            <div className="texto-grande"> Producto + </div>
             <div className="texto-grande">"Nombre del producto" + </div>
             <div className="texto-grande">Costo + </div>
             <div className="texto-grande">"Precio invidiual del producto" </div>
             <div className="texto-grande">Ejemplo: </div>
-            <div>Compre cinco Inka Kola costo dos soles cincuenta</div>
+            <div>Compre cinco producto Inka Kola costo dos soles cincuenta</div>
           </div>
         </div>
       )}
@@ -222,7 +227,7 @@ function Agregarstock() {
             <span className="close" onClick={closeMessage}>
               &times;
             </span>
-            <div className="texto-grande" >El Producto fue modificado</div>
+            <div className="texto-grande">El Producto fue modificado</div>
             <p>Nombre: {productoCreado.nombre}</p>
             <p>Cantidad Previa: {previacan}</p>
             <p>Cantidad Nueva: {nuevacan}</p>

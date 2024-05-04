@@ -151,12 +151,13 @@ function CreateVentaPage() {
               de la siguiente forma
             </div>
             <div className="texto-grande">Vendi + </div>
-            <div className="texto-grande">"Cantidad numerica " + </div>
+            <div className="texto-grande">"Cantidad numerica " + </div>{" "}
+            <div className="texto-grande">Producto + </div>
             <div className="texto-grande">"Nombre del producto" + </div>
             <div className="texto-grande">Salio + </div>
             <div className="texto-grande">"Precio de venta total" </div>
             <div className="texto-grande">Ejemplo: </div>{" "}
-            <div>Vendi cinco Inka Kola costo doce soles cincuenta</div>
+            <div>Vendi cinco producto Inka Kola costo doce soles cincuenta</div>
           </div>
         </div>
       )}
