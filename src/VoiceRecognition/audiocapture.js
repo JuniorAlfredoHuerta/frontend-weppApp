@@ -7,62 +7,41 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./audiocapture.css";
 import { Link } from "react-router-dom";
-import { MediaRecorder, register } from "extendable-media-recorder";
-import { connect } from "extendable-media-recorder-wav-encoder";
 
 const AudioRecorder = ({ onApiResponse }) => {
-  const mediaRecorder = useRef(null);
-  const audioChunks = useRef([]);
+  const recognition = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
-  const [encoderRegistered, setEncoderRegistered] = useState(false);
+  const transcriptRef = useRef(""); // Usa useRef para almacenar la transcripción
+
   useEffect(() => {
-    const initializeEncoder = async () => {
-      if (!encoderRegistered) {
-        try {
-          const encoder = await connect();
-          await register(encoder);
-          setEncoderRegistered(true);
-        } catch (error) {}
-      }
+    recognition.current = new window.webkitSpeechRecognition();
+    recognition.current.continuous = true;
+    recognition.current.interimResults = false;
+
+    recognition.current.onstart = () => {
+      setIsRecording(true);
     };
 
-    initializeEncoder();
+    recognition.current.onend = () => {
+      setIsRecording(false);
+      sendTranscriptToAPI(transcriptRef.current); // Usa el valor actual de transcriptRef
+    };
 
-    return () => {};
-  }, [encoderRegistered]);
+    recognition.current.onresult = (event) => {
+      const result = event.results[0][0];
+      const transcript = result.transcript;
+      transcriptRef.current = transcript; // Actualiza el valor de transcriptRef
+    };
 
-  const toggleRecording = async () => {
-    if (!isRecording) {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorder.current = new MediaRecorder(stream, {
-        mimeType: "audio/wav",
-      });
-      mediaRecorder.current.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunks.current.push(event.data);
-        }
-      };
-      mediaRecorder.current.start();
-      setIsRecording(true);
-    } else {
-      mediaRecorder.current.stop();
-      mediaRecorder.current.onstop = async () => {
-        const blob = new Blob(audioChunks.current, { type: "audio/wav" });
-        try {
-          await sendAudioToAPI(blob, "recorded-audio.wav");
-        } catch (error) {
-          console.error(error);
-        }
-        mediaRecorder.current = null;
-        audioChunks.current = [];
-        setIsRecording(false);
-      };
-    }
-  };
-
-  const sendAudioToAPI = async (audioBlob, fileName) => {
+    return () => {
+      if (recognition.current) {
+        recognition.current.stop();
+      }
+    };
+  }, []);
+  const sendTranscriptToAPI = async (transcript) => {
     const formData = new FormData();
-    formData.append("audio", audioBlob, fileName);
+    formData.append("transcript", transcript);
 
     try {
       const response = await fetch(
@@ -74,14 +53,22 @@ const AudioRecorder = ({ onApiResponse }) => {
       );
 
       if (!response.ok) {
-        throw new Error("Error al enviar el audio a la API");
+        throw new Error("Error al enviar la transcripción a la API");
       }
 
       const data = await response.json();
       console.log(data);
       onApiResponse(data);
     } catch (error) {
-      console.error(error);
+      //console.error(error);
+    }
+  };
+
+  const toggleRecording = () => {
+    if (!isRecording) {
+      recognition.current.start();
+    } else {
+      recognition.current.stop();
     }
   };
 
@@ -106,4 +93,5 @@ const AudioRecorder = ({ onApiResponse }) => {
     </div>
   );
 };
+
 export default AudioRecorder;
