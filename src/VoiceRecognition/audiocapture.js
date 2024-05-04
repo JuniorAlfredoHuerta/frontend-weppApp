@@ -65,10 +65,13 @@ const AudioRecorder = ({ onApiResponse }) => {
     formData.append("audio", audioBlob, fileName);
 
     try {
-      const response = await fetch("http://localhost:5000/transcribe", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://api-app-n3qk.onrender.com/transcribe",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Error al enviar el audio a la API");
