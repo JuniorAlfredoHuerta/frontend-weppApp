@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "version": "0.1.0",
-  "proxy": "http://localhost:7000",
+  "proxy": "https://backend-production-a138.up.railway.app",
   "private": true,
   "dependencies": {
     "@ffmpeg/core": "^0.8.3",
