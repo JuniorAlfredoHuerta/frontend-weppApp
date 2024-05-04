@@ -75,6 +75,7 @@ function SearchStock() {
 
   const [selectedProduct, setselectedProduct] = useState(false);
   const [selectedProductid, setselectedProductid] = useState(false);
+  const [selectedProducts, setSelectedProducts] = useState([]);
 
   const generatePDF = async () => {
     const bodegatok = await calltokenbodega();
@@ -87,13 +88,6 @@ function SearchStock() {
     doc.text(`Bodega: ${bodegatok.data.nombre}`, 10, y + 10);
     y += 30;
 
-    doc.line(10, y - 10, 10, y); // Línea izquierda
-    doc.line(50, y - 10, 50, y); // Línea entre columnas
-    doc.line(100, y - 10, 100, y); // Línea entre columnas
-    doc.line(150, y - 10, 150, y); // Línea entre columnas
-    doc.line(200, y - 10, 200, y); // Línea derecha
-    doc.line(10, y - 10, 200, y - 10); // Línea superior
-    doc.line(10, y, 200, y); // Línea inferior
     // Encabezados de la tabla
     doc.text("Producto", 15, y - 3);
     doc.text("Cantidad", 65, y - 3);
@@ -101,8 +95,17 @@ function SearchStock() {
     doc.text("Total S/.", 165, y - 3);
     y += 10;
 
+    // Verificar si hay productos seleccionados
+    let productsToInclude = stocks;
+    if (selectedProducts.length > 0) {
+      // Si hay productos seleccionados, filtrar solo esos productos
+      productsToInclude = stocks.filter((product) =>
+        selectedProducts.includes(product._id)
+      );
+    }
+
     // Contenido de la tabla
-    stocks.forEach((product) => {
+    productsToInclude.forEach((product) => {
       doc.line(10, y - 10, 10, y); // Línea izquierda
       doc.line(50, y - 10, 50, y); // Línea entre columnas
       doc.line(100, y - 10, 100, y); // Línea entre columnas
@@ -123,11 +126,11 @@ function SearchStock() {
     });
 
     // Total de totales
-    const totalCantidad = stocks.reduce(
+    const totalCantidad = productsToInclude.reduce(
       (total, product) => total + product.cantidad,
       0
     );
-    const totalPrecioCompra = stocks.reduce(
+    const totalPrecioCompra = productsToInclude.reduce(
       (total, product) => total + product.cantidad * product.preciocompra,
       0
     );
@@ -137,6 +140,14 @@ function SearchStock() {
     doc.text(`S/. ${totalCantidad}`, 165, y + 10);
     doc.text(`S/. ${totalPrecioCompra}`, 165, y + 20);
     doc.save("lista_productos.pdf");
+  };
+
+  const handleProductSelection = (event, productId) => {
+    if (event.target.checked) {
+      setSelectedProducts([...selectedProducts, productId]);
+    } else {
+      setSelectedProducts(selectedProducts.filter((id) => id !== productId));
+    }
   };
 
   return (
@@ -175,6 +186,11 @@ function SearchStock() {
         <div className="product-container">
           {stocks.map((product, index) => (
             <div className="product-link" key={index}>
+              <input
+                type="checkbox"
+                id={`product-${index}`}
+                onChange={(e) => handleProductSelection(e, product._id)}
+              />
               <FontAwesomeIcon
                 icon={faTrash}
                 onClick={() => handleVentanaDelete(product.nombre, product._id)}

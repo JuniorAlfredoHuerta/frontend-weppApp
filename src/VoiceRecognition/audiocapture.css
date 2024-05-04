@@ -78,11 +78,6 @@
   z-index: 999; /* Asegura que el contenedor esté en la parte superior */
 }
 
-.microphone-button:hover {
-  background-color: #a1bd4c; /* Cambia el color de fondo al pasar el mouse */
-  color: #fff; /* Cambia el color del texto al pasar el mouse */
-}
-
 .recording-message {
   position: absolute;
   top: 10px; /* Ajusta la posición vertical según tus necesidades */
@@ -103,4 +98,10 @@
   border-style: solid;
   border-color: transparent transparent red transparent;
   transform: translateX(-50%);
+}
+
+.microphone-button.disabled {
+  background-color: #ccc; /* Fondo gris claro */
+  color: #666; /* Texto gris oscuro */
+  cursor: not-allowed; /* Cambiar el cursor a 'no permitido' */
 }

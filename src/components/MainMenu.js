@@ -43,11 +43,22 @@ function MainMenu() {
 
   const handleApiResponse = (data) => {
     setApiData(data);
-    //console.log(ApiData);
+
     if (Cookies.get("tokenbodega")) {
       const { transcription } = data;
+
       if (transcription) {
-        switch (transcription.comando) {
+        const { comando, nombre_producto } = transcription;
+        console.log(comando);
+
+        // Verificar si comando es null o undefined antes de entrar al switch
+        if (comando === null || comando === undefined) {
+          console.log("Comando no reconocido o es null");
+          setCommandNotRecognized(true);
+          return; // Salir de la función si comando es null o undefined
+        }
+
+        switch (comando) {
           case "agregar":
             navigate("/agregar");
             break;
@@ -64,18 +75,23 @@ function MainMenu() {
             navigate("/ventas");
             break;
           case "producto":
-            const foundProduct = stocks.find(
-              (product) => product.nombre === data.transcription.nombre_producto
-            );
-            if (foundProduct) {
-              const idproducto = foundProduct._id;
-              navigate(`/producto/${idproducto}`);
+            if (nombre_producto) {
+              const foundProduct = stocks.find(
+                (product) => product.nombre === nombre_producto
+              );
+              if (foundProduct) {
+                const idproducto = foundProduct._id;
+                navigate(`/producto/${idproducto}`);
+              }
             }
             break;
-          case "None":
+          case undefined:
+            console.log("NO SE RECONOCE COMANDO");
             setCommandNotRecognized(true);
             break;
         }
+      } else {
+        setCommandNotRecognized(true);
       }
     }
   };
@@ -126,10 +142,10 @@ function MainMenu() {
     try {
       setSelectedBodega({ id: selectedId, nombre: selectedNombre });
       window.location.reload();
-      //const res = await calltokenbodega();
-      ////console.log(res.data);
-      //const cookies = Cookies.get();
-      ////console.log(cookies.tokenbodega);
+      const res = await calltokenbodega();
+      //console.log(res.data);
+      const cookies = Cookies.get();
+      //console.log(cookies.tokenbodega);
     } catch (error) {
       //console.error("Error al obtener la información de la bodega:", error);
     }
@@ -271,7 +287,7 @@ function MainMenu() {
                   style={{ marginBottom: "10px", marginLeft: "30px" }}
                 />
                 <div style={{ marginBottom: "10px", marginLeft: "30px" }}>
-                  List de Productos
+                  Lista de Productos
                 </div>
               </div>
             </Link>
@@ -294,7 +310,7 @@ function MainMenu() {
               </div>
             </Link>
           )}
-          {Cookies.get("tokenbowdega") && (
+          {Cookies.get("tokenbodega") && (
             <Link to="/ventas">
               <div style={{ textAlign: "center" }}>
                 <FontAwesomeIcon

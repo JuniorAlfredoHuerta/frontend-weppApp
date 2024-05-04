@@ -23,7 +23,7 @@ function Agregarstock() {
   const [nuevacan, setNuevacan] = useState("");
   const [apiData, setApiData] = useState(null);
   const [formErrors, setFormErrors] = useState({});
-
+  const [errorMessage, setErrorMessage] = useState("");
   const [info, setInfo] = useState(false);
 
   useEffect(() => {
@@ -109,6 +109,19 @@ function Agregarstock() {
         preciocompra: precioCompra.toFixed(2),
         precioventa: precioVenta.toFixed(2),
       };
+      if (
+        newProducto.nombre !== "" &&
+        newProducto.cantidad !== "" &&
+        newProducto.preciocompra !== "" &&
+        newProducto.precioventa !== ""
+      ) {
+        reset(newProducto);
+        setErrorMessage(""); // Limpiar el mensaje de error si los datos son válidos
+      } else {
+        setErrorMessage(
+          "No se entendió el comando, pero se llenó el formulario con los datos que se pudieron entender."
+        );
+      }
 
       reset(newProducto);
     }
@@ -236,6 +249,7 @@ function Agregarstock() {
           </div>
         </div>
       )}{" "}
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
       <div className="audio-recorder">
         <AudioRecorder onApiResponse={setApiData} />
       </div>

@@ -7,13 +7,29 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./audiocapture.css";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const AudioRecorder = ({ onApiResponse }) => {
   const recognition = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
-  const transcriptRef = useRef(""); // Usa useRef para almacenar la transcripción
+  const transcriptRef = useRef("");
+  const [canRecord, setCanRecord] = useState(false);
 
   useEffect(() => {
+    if (!Cookies.get("tokenbodega")) {
+      setCanRecord(false);
+      return;
+    }
+
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then(() => {
+        setCanRecord(true);
+      })
+      .catch((error) => {
+        console.error("Error al acceder al micrófono:", error);
+        setCanRecord(false);
+      });
     recognition.current = new window.webkitSpeechRecognition();
     recognition.current.continuous = true;
     recognition.current.interimResults = false;
@@ -65,18 +81,20 @@ const AudioRecorder = ({ onApiResponse }) => {
   };
 
   const toggleRecording = () => {
-    if (!isRecording) {
+    if (!isRecording && canRecord) {
       recognition.current.start();
     } else {
       recognition.current.stop();
     }
   };
-
   return (
     <div className="container-with-blue-background">
       <button
-        className={`microphone-button ${isRecording ? "recording" : ""}`}
+        className={`microphone-button ${isRecording ? "recording" : ""} ${
+          !canRecord ? "disabled" : ""
+        }`}
         onClick={toggleRecording}
+        disabled={!canRecord}
       >
         <FontAwesomeIcon icon={faMicrophone} />
       </button>
