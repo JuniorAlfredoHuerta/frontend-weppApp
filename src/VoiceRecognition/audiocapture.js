@@ -40,6 +40,7 @@ const AudioRecorder = ({ onApiResponse }) => {
 
     recognition.current.onend = () => {
       setIsRecording(false);
+      console.log(transcriptRef.current);
       sendTranscriptToAPI(transcriptRef.current); // Usa el valor actual de transcriptRef
     };
 
