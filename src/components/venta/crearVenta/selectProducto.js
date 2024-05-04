@@ -25,7 +25,7 @@ function SelectProducto({ onProductoChange, apiData }) {
       );
       setCantidadstock(parseInt(product.cantidad));
       setNombre(product.nombre);
-      if (product && precioVenta == "") {
+      if (product && precioVenta === "") {
         setPrecioVenta(product.precioventa || "");
       }
     }

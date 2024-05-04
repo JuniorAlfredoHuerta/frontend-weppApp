@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import LoginForm from "./loginform";
 import "./login.css";
-//import AudioRecorder from "../../VoiceRecognition/audiocapture.js";
 import { useAuth } from "../context/AuthContext.js";
 
 function Login() {
