@@ -271,7 +271,7 @@ function MainMenu() {
                   style={{ marginBottom: "10px", marginLeft: "30px" }}
                 />
                 <div style={{ marginBottom: "10px", marginLeft: "30px" }}>
-                  Buscar Producto
+                  List de Productos
                 </div>
               </div>
             </Link>
