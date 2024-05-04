@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
       setErrors([]);
     } catch (error) {
       if (error.response) {
-        //console.log(error.response.data);
+        ////console.log(error.response.data);
         setErrors(error.response.data);
       } else {
         setErrors(["Error de conexión: No se pudo conectar con el servidor"]);
@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }) => {
 
   const updateUser = async (id, user) => {
     try {
-      console.log(id, user);
+      //console.log(id, user);
       await editUserRequest(id, user);
     } catch (error) {
       console.error(error);
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
 
   const checkLogin = async () => {
     const cookies = Cookies.get();
-    console.log(cookies);
+    //console.log(cookies);
     const cookiedata = cookies.token;
     if (!cookies.token) {
       setIsAuthenticated(false);
@@ -88,9 +88,9 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const res = await verifyTokenRequest();
-      console.log("res", res);
+      //console.log("res", res);
       if (!res.data) {
-        console.log("NO HAY TOKKEN VOLVIENDO AL iNICIO");
+        //console.log("NO HAY TOKKEN VOLVIENDO AL iNICIO");
 
         return setIsAuthenticated(false);
       }

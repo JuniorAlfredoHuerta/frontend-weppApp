@@ -26,7 +26,7 @@ export const StockProvider = ({ children }) => {
       const res = await getStocksRequest();
       setStocks(res.data);
     } catch (err) {
-      console.log(err);
+      //console.log(err);
     }
   };
 
@@ -40,14 +40,14 @@ export const StockProvider = ({ children }) => {
   };
 
   const createStock = async (stock) => {
-    // console.log(stock);
+    // //console.log(stock);
     const res = await createstockRequest(stock);
-    console.log(res);
+    //console.log(res);
   };
-  
+
   const updateStock = async (id, stock) => {
     try {
-      //console.log(id, stock);
+      ////console.log(id, stock);
       await updateStockRequest(id, stock);
     } catch (error) {
       console.error(error);
@@ -56,7 +56,7 @@ export const StockProvider = ({ children }) => {
 
   const deleteStock = async (id, stock) => {
     try {
-      //console.log(id, stock);
+      ////console.log(id, stock);
       await deleteStockRequest(id, stock);
     } catch (error) {
       console.error(error);
@@ -65,7 +65,14 @@ export const StockProvider = ({ children }) => {
 
   return (
     <stockContext.Provider
-      value={{ stocks, createStock, updateStock, getStocks, getStock ,deleteStock}}
+      value={{
+        stocks,
+        createStock,
+        updateStock,
+        getStocks,
+        getStock,
+        deleteStock,
+      }}
     >
       {children}
     </stockContext.Provider>

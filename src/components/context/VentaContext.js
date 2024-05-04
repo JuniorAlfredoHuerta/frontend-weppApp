@@ -15,7 +15,7 @@ export const VentaProvider = ({ children }) => {
   const [ventas, setVentas] = useState([]);
 
   const createVenta = async (venta) => {
-    console.log(venta);
+    //console.log(venta);
     await createVentaRequest(venta);
   };
 
@@ -24,7 +24,7 @@ export const VentaProvider = ({ children }) => {
       const res = await getVentasRequest();
       setVentas(res.data);
     } catch (err) {
-      console.log(err);
+      //console.log(err);
     }
   };
   return (

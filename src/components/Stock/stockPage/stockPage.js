@@ -37,7 +37,7 @@ function StockPage() {
   }, [id, getStock, setValue]);
 
   const onSubmit = async (data) => {
-    console.log(data);
+    //console.log(data);
     await updateStock(id, data);
     setShowSuccessMessage(true);
     setTimeout(() => {

@@ -144,7 +144,7 @@ const AudioRecorder = ({ onApiResponse }) => {
       const data = await response.json();
 
       // Manejar la respuesta JSON
-      console.log(data); // Imprimir la respuesta JSON en la consola
+      //console.log(data); // Imprimir la respuesta JSON en la consola
 
       onApiResponse(data);
       // Aquí puedes agregar más lógica para trabajar con los datos, por ejemplo, actualizar el estado de tu componente React

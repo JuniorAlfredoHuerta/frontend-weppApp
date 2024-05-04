@@ -40,9 +40,9 @@ function SearchStock() {
     const foundProduct = stocks.find(
       (product) => product.nombre === data.transcription.nombre_producto
     );
-    console.log(foundProduct);
+    //console.log(foundProduct);
     if (data.transcription.comando === "eliminar") {
-      console.log("ESTO SE ELIMINAR");
+      //console.log("ESTO SE ELIMINAR");
       if (foundProduct) {
         handleVentanaDelete(foundProduct.nombre, foundProduct._id);
       }

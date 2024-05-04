@@ -43,7 +43,7 @@ function MainMenu() {
 
   const handleApiResponse = (data) => {
     setApiData(data);
-    console.log(ApiData);
+    //console.log(ApiData);
     if (Cookies.get("tokenbodega")) {
       const { transcription } = data;
       if (transcription) {
@@ -127,9 +127,9 @@ function MainMenu() {
       setSelectedBodega({ id: selectedId, nombre: selectedNombre });
       window.location.reload();
       //const res = await calltokenbodega();
-      //console.log(res.data);
+      ////console.log(res.data);
       //const cookies = Cookies.get();
-      //console.log(cookies.tokenbodega);
+      ////console.log(cookies.tokenbodega);
     } catch (error) {
       //console.error("Error al obtener la información de la bodega:", error);
     }
@@ -294,7 +294,7 @@ function MainMenu() {
               </div>
             </Link>
           )}
-          {Cookies.get("tokenbodega") && (
+          {Cookies.get("tokenbowdega") && (
             <Link to="/ventas">
               <div style={{ textAlign: "center" }}>
                 <FontAwesomeIcon

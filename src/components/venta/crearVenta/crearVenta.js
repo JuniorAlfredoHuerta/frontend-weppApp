@@ -37,7 +37,7 @@ function CreateVentaPage() {
 
   const handleApiResponse = (data) => {
     setApiData(data);
-    console.log(data);
+    //console.log(data);
 
     const product = stocksConCantidad.find(
       (product) => product.nombre === data.transcription.nombre_producto
@@ -69,8 +69,8 @@ function CreateVentaPage() {
     updatedProductos[index] = producto;
     setAppProductos(updatedProductos);
 
-    // Agregar un console.log para verificar los datos actualizados
-    //console.log("Datos del producto actualizados:", updatedProductos);
+    // Agregar un //console.log para verificar los datos actualizados
+    ////console.log("Datos del producto actualizados:", updatedProductos);
     if (updatedProductos) {
     }
   };
@@ -94,7 +94,7 @@ function CreateVentaPage() {
     const stocktotupdate = appProductos.map(
       ({ nombre, precioVenta, total, ...rest }) => rest
     );
-    //console.log(stocktotupdate);
+    ////console.log(stocktotupdate);
     for (let i = 0; i < stocktotupdate.length; i++) {
       const stocktest = stocktotupdate.find(
         (stocktest) => stocktest._id === stocktotupdate[i]._id
@@ -103,9 +103,9 @@ function CreateVentaPage() {
         (realstock) => realstock._id === stocktotupdate[i]._id
       );
 
-      //console.log(stocks)
-      //console.log(realstock.cantidad)
-      //console.log(stocktest.cantidad);
+      ////console.log(stocks)
+      ////console.log(realstock.cantidad)
+      ////console.log(stocktest.cantidad);
       const stockleft =
         parseInt(realstock.cantidad) - parseInt(stocktest.cantidad);
       updateStock(stocktotupdate[i]._id, { cantidad: stockleft });

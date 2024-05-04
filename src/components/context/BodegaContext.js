@@ -36,37 +36,37 @@ export const BodegaProvider = ({ children }) => {
   const getBodegas = async () => {
     try {
       const res = await getBodegasRequest();
-      console.log(res.data);
+      //console.log(res.data);
       setBodegas(res.data);
     } catch (err) {
-      console.log(err);
+      //console.log(err);
     }
   };
 
   const gettokenbodega = async (id) => {
     try {
-      //console.log(id);
+      ////console.log(id);
       const res = await tokenBodega({ bodega: id });
-      Cookies.set("tokenbodega" , res.data.tokenbodega)
-      //console.log(res.data);
+      Cookies.set("tokenbodega", res.data.tokenbodega);
+      ////console.log(res.data);
     } catch (err) {
-      //console.log(err);
+      ////console.log(err);
     }
   };
 
   const calltokenbodega = async () => {
     try {
       const cookies = Cookies.get();
-      //console.log(cookies.tokenbodega);
+      ////console.log(cookies.tokenbodega);
       const idbodega = await verifytokenBodega(cookies.tokenbodega);
-      //console.log(idbodega);
+      ////console.log(idbodega);
       return idbodega;
     } catch (err) {}
   };
 
   const updateBodega = async (id, bodega) => {
     try {
-      //console.log(id, stock);
+      ////console.log(id, stock);
       await editBodegaRequest(id, bodega);
     } catch (error) {
       console.error(error);
@@ -75,7 +75,7 @@ export const BodegaProvider = ({ children }) => {
 
   const deleteBodega = async (id, bodega) => {
     try {
-      //console.log(id, stock);
+      ////console.log(id, stock);
       await deleteBodegaRequest(id, bodega);
     } catch (error) {
       console.error(error);
@@ -84,7 +84,7 @@ export const BodegaProvider = ({ children }) => {
 
   const createBodega = async (bodega) => {
     try {
-      console.log(bodega);
+      //console.log(bodega);
       const res = await createBodegaRequest(bodega);
     } catch (error) {
       console.error(error);
