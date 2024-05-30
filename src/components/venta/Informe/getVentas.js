@@ -16,7 +16,15 @@ function GetVentas() {
   const { calltokenbodega } = useBodega();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [startDate2, setStartDate2] = useState(null);
+  const [endDate2, setEndDate2] = useState(null);
   const [info, setinfo] = useState(false);
+  const { ventas, getVentas } = useVenta();
+
+  useEffect(() => {
+    getVentas();
+  }, [startDate, endDate]);
+
   const openInfo = () => {
     setinfo(true);
   };
@@ -24,32 +32,40 @@ function GetVentas() {
   const closeInfo = () => {
     setinfo(false);
   };
-  const { ventas, getVentas } = useVenta();
-  useEffect(() => {
-    getVentas();
-  }, []);
 
   const handleApiResponse = (data) => {
     setApiData(data);
     if (data.transcription.comando === "descargar") {
-      generatePDF();
+      generatePDF(startDate, endDate);
     }
   };
+  const ajustarfechas = (startDate, endDate) => {
+    const adjustedStartDate = new Date(startDate);
+    adjustedStartDate.setHours(0, 0, 0, 0);
+    setStartDate2(adjustedStartDate);
 
-  const filterSalesByDate = () => {
-    if (startDate && endDate) {
+    const adjustedEndDate = new Date(endDate);
+    adjustedEndDate.setDate(adjustedEndDate.getDate() + 1); // Sumar un día
+
+    adjustedEndDate.setHours(23, 59, 59, 999);
+    setEndDate2(adjustedEndDate);
+  };
+
+  const filterSalesByDate = (startDate, endDate) => {
+    console.log("filtering by dates:", startDate, endDate);
+    console.log("filtering by dates:", startDate2, endDate2);
+
+    if (startDate2 && endDate2) {
       return ventas.filter((venta) => {
         const ventaDate = new Date(venta.createdAt);
-        return ventaDate >= startDate && ventaDate <= endDate;
+        return ventaDate >= startDate2 && ventaDate <= endDate2;
       });
     } else {
       return ventas;
     }
   };
 
-  const filteredSales = filterSalesByDate();
-
-  const generatePDF = async () => {
+  const generatePDF = async (startDate2, endDate2) => {
     const bodegatok = await calltokenbodega();
 
     const doc = new jsPDF();
@@ -60,11 +76,11 @@ function GetVentas() {
     let userDetailsAdded = false;
     let totalSales = 0;
 
-    const filteredSales = filterSalesByDate();
+    const filteredSales = filterSalesByDate(startDate2, endDate2);
 
     const dateRange = `Rango de fechas: ${
-      startDate ? startDate.toDateString() : ""
-    } - ${endDate ? endDate.toDateString() : ""}`;
+      startDate2 ? startDate2.toDateString() : ""
+    } - ${endDate2 ? endDate2.toDateString() : ""}`;
 
     // Mostrar detalles de usuario, bodega y rango de fechas al principio del documento
     doc.text(`Usuario: ${user.username}`, 10, y);
@@ -156,19 +172,31 @@ function GetVentas() {
           <input
             type="date"
             value={startDate ? startDate.toISOString().split("T")[0] : ""}
-            onChange={(e) => setStartDate(new Date(e.target.value))}
+            onChange={(e) => {
+              const newStartDate = new Date(e.target.value);
+              setStartDate(newStartDate);
+              ajustarfechas(newStartDate, endDate);
+            }}
             style={{ maxWidth: "150px", marginRight: "10px" }}
           />
+
           <input
             type="date"
             value={endDate ? endDate.toISOString().split("T")[0] : ""}
-            onChange={(e) => setEndDate(new Date(e.target.value))}
+            onChange={(e) => {
+              const newEndDate = new Date(e.target.value);
+              setEndDate(newEndDate);
+              ajustarfechas(startDate, newEndDate);
+            }}
             style={{ maxWidth: "150px" }}
           />
-          <button onClick={generatePDF}>Descargar PDF</button>
+
+          <button onClick={() => generatePDF(startDate, endDate)}>
+            Descargar PDF
+          </button>
         </div>
         <div className="ventas-container">
-          {filteredSales.map((venta, index) => (
+          {filterSalesByDate(startDate, endDate).map((venta, index) => (
             <div key={index} className="venta-item">
               <h3>{format(new Date(venta.createdAt), "dd/MM/yyyy - HH:mm")}</h3>
               <table>

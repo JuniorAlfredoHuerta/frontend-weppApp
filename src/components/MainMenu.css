@@ -120,19 +120,26 @@
 }
 
 .button-help {
-  background-color: #ffffff; /* Color de fondo del botón */
-  color: #000000; /* Color del texto del botón (negro) */
-  padding: 6px 12px; /* Reducir el padding para hacer el botón más compacto */
-  border: 2px solid #030303; /* Establecer un borde sólido de color oscuro */
-  border-radius: 8px; /* Agregar esquinas redondeadas al botón */
-  font-size: 16px; /* Tamaño de fuente del texto */
-  cursor: pointer; /* Cambiar el cursor al pasar sobre el botón */
-  transition: background-color 0.2s, color 0.2s; /* Transición suave al cambiar de color */
+  background-color: #ffffff;
+  color: #000000;
+  padding: 6px 12px;
+  border: 2px solid #030303;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
   margin-right: 2px;
 }
 
 .texto-grande {
-  font-size: 20px; /* Tamaño de la letra: 20px */
-  font-weight: bold; /* Hacer la letra negrita */
+  font-size: 20px;
+  font-weight: bold;
   margin-bottom: 5px;
+}
+
+.select-bodega-message {
+  font-size: 48px;
+  color: red;
+  text-align: center;
+  margin-top: 20px;
 }

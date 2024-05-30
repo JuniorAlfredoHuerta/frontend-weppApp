@@ -5,6 +5,7 @@ import {
   editBodegaRequest,
   getBodegaRequest,
   getBodegasRequest,
+  getAllBodegasRequest,
   tokenBodega,
   verifytokenBodega,
 } from "../../api/bodega";
@@ -22,6 +23,7 @@ export const useBodega = () => {
 
 export const BodegaProvider = ({ children }) => {
   const [bodegas, setBodegas] = useState([]);
+  const [allbodegas, setAllbodegas] = useState([]);
   const [errors, setErros] = useState([]);
 
   const getBodega = async (id) => {
@@ -36,11 +38,18 @@ export const BodegaProvider = ({ children }) => {
   const getBodegas = async () => {
     try {
       const res = await getBodegasRequest();
-      //console.log(res.data);
+      console.log(res.data);
       setBodegas(res.data);
     } catch (err) {
       //console.log(err);
     }
+  };
+
+  const AllBodegas = async () => {
+    try {
+      const res = await getAllBodegasRequest();
+      setAllbodegas(res.data);
+    } catch (err) {}
   };
 
   const gettokenbodega = async (id) => {
@@ -96,11 +105,13 @@ export const BodegaProvider = ({ children }) => {
     <bodegaContext.Provider
       value={{
         bodegas,
+        allbodegas,
         createBodega,
         getBodegas,
         gettokenbodega,
         calltokenbodega,
         updateBodega,
+        AllBodegas,
         getBodega,
         deleteBodega,
         errors,

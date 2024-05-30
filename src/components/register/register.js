@@ -23,10 +23,10 @@ function Register() {
       </div>
       <div className="container">
         <p>Si ya posee una cuenta ingrese </p>
-        <Link to="/" onClick={handleClearErrors}>
+        <Link to="/" onClick={handleClearErrors} className="link-button">
           <button>Ingreso</button>
         </Link>
-      </div>{" "}
+      </div>
     </div>
   );
 }

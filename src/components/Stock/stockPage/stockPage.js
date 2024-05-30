@@ -20,12 +20,10 @@ function StockPage() {
       try {
         const res = await getStock(id);
         setProducto(res);
-        // Actualiza los valores del formulario cuando se obtiene el producto
         setValue("nombre", res.nombre || "");
         setValue("cantidad", res.cantidad || "");
         setValue("preciocompra", res.preciocompra || "");
         setValue("precioventa", res.precioventa || "");
-        setValue("ubicacion", res.ubicacion || "");
       } catch (error) {
         console.error("Error fetching product:", error);
       }
@@ -152,15 +150,6 @@ function StockPage() {
           type="text"
           {...register("precioventa", { required: true })}
           value={producto.precioventa || ""}
-          className="registro-inputs"
-          onChange={handleChange}
-        />
-
-        <label>Ubicación del producto</label>
-        <input
-          type="text"
-          {...register("ubicacion")}
-          value={producto.ubicacion || ""}
           className="registro-inputs"
           onChange={handleChange}
         />

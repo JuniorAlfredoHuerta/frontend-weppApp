@@ -45,3 +45,32 @@
   padding: 0.5rem;
   color: #ffffff;
 }
+
+.password-field {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 10px; /* Puedes ajustar esta posición según tu preferencia */
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.terms-checkbox label {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.terms-checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.terms-checkbox input[type="checkbox"] {
+  margin-right: 10px; /* Ajusta el margen según sea necesario */
+}
+.link-button {
+  text-decoration: none;
+}

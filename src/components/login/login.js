@@ -22,7 +22,11 @@ function Login() {
       </div>
       <div className="container">
         <p>No tiene cuenta, Registrese de inmediato </p>
-        <Link to="/register" onClick={handleClearErrors}>
+        <Link
+          to="/register"
+          onClick={handleClearErrors}
+          className="link-button"
+        >
           <button>Registro</button>
         </Link>
       </div>

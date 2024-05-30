@@ -15,6 +15,7 @@ function Edituser() {
     formState: { errors },
   } = useForm();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     // Llena los campos del formulario con los datos del usuario al cargar el componente
@@ -31,11 +32,22 @@ function Edituser() {
     }
   }, [user, setValue]);
 
+  const isDateValid = (dateString) => {
+    const today = new Date();
+    const date = new Date(dateString);
+    return date < today;
+  };
   const onSubmit = async (data) => {
     try {
-      // Enviar la fecha en formato ISO (AAAA-MM-DD) al backend
-      data.birthdate = data.birthdate + "T00:00:00.000Z"; // Agrega la hora para el formato ISO
-      await updateUser(user.id, data); // Actualiza el usuario con los datos del formulario
+      if (!isDateValid(data.birthdate)) {
+        console.error("La fecha de nacimiento no puede ser del futuro");
+        setFormErrors({
+          birthdate: "La fecha de nacimiento no puede ser del futuro",
+        });
+        return;
+      }
+      data.birthdate = data.birthdate + "T00:00:00.000Z";
+      await updateUser(user.id, data);
       setShowSuccessMessage(true);
       checkLogin();
       setTimeout(() => {
@@ -74,13 +86,20 @@ function Edituser() {
         />
         {errors.name && <p className="redto">Campo requerido</p>}
 
-        <label>Documento</label>
+        <label>Documento( DNI o RUC)</label>
         <input
-          type="text"
-          {...register("idDoc", { required: true })}
+          type="number"
+          inputMode="numeric"
+          {...register("idDoc", {
+            required: true,
+            pattern: /^(?:\d{8}|\d{11})$/, // Expresión regular para aceptar 8 o 11 cifras
+          })}
           className="registro-inputs"
         />
         {errors.idDoc && <p className="redto">Campo requerido</p>}
+        {errors.idDoc && (
+          <p className="redto">El documento debe tener 8 o 11 cifras</p>
+        )}
 
         <label>Fecha de nacimiento</label>
         <input
@@ -89,6 +108,9 @@ function Edituser() {
           className="registro-inputs"
         />
         {errors.birthdate && <p className="redto">Campo requerido</p>}
+        {formErrors.birthdate && (
+          <p className="redto">{formErrors.birthdate}</p>
+        )}
 
         <div className="audio-recorder">
           <AudioRecorder />

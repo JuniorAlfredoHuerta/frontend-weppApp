@@ -45,3 +45,19 @@
   padding: 0.5rem;
   color: #ffffff;
 }
+
+.password-field {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.link-button {
+  text-decoration: none;
+}

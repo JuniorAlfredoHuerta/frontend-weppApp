@@ -1,47 +1,77 @@
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import "./addbodega.css";
 import { useBodega } from "../context/BodegaContext";
 
 function AddBodegaPage({ closeModal }) {
+  const [submitting, setSubmitting] = useState(false);
+  const [ERRORES, setErros] = useState([]);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const { createBodega, getBodegas, errors: ERRORES, setErros } = useBodega();
+  const { createBodega, getBodegas, bodegas, allbodegas, AllBodegas } =
+    useBodega();
+
   useEffect(() => {
-    // Limpia los errores al montar el componente
-    setErros([]);
-  }, [setErros]);
+    setErros([]); // Limpiar los errores al montar el componente
+  }, []);
+
   const onSubmit = async (data) => {
     try {
-      // Validar que idDoc tenga exactamente 11 dígitos
-      if (data.idDoc.length !== 11) {
+      if (!/^(?=.*[A-Za-z])[A-Za-z0-9]+$/.test(data.nombrebodega)) {
         throw new Error(
-          "El campo Documento de la bodega debe tener 11 dígitos."
+          "El nombre de la bodega debe contener al menos una letra."
         );
       }
+      if (!/^\d+$/.test(data.idDoc)) {
+        throw new Error("El RUC de la bodega debe contener solo números.");
+      }
+      if (!/^(?=.*[A-Za-z])[A-Za-z0-9]+$/.test(data.razonsocial)) {
+        throw new Error("La razón social debe contener al menos una letra.");
+      }
+      if (!/^(?=.*[A-Za-z])[A-Za-z0-9]+$/.test(data.ubicacion)) {
+        throw new Error(
+          "La ubicación de la bodega debe contener al menos una letra."
+        );
+      }
+      if (!(data.idDoc.length === 8 || data.idDoc.length === 11)) {
+        throw new Error("El campo Documento debe tener ser un numero valido.");
+      }
+      const existingBodega = bodegas.find(
+        (bodega) => bodega.nombrebodega === data.nombrebodega
+      );
 
-      await createBodega(data); // Esperar a que se complete la creación de la bodega
-      await getBodegas(); // Actualizar la lista de bodegas después de crear una nueva
+      const existeruc = allbodegas.find(
+        (bodega) => bodega.idDoc === data.idDoc
+      );
+      const existerazon = allbodegas.find(
+        (bodega) => bodega.razonsocial === data.razonsocial
+      );
 
-      // Si no hay errores durante la creación y actualización, cerrar el modal
+      if (existingBodega) {
+        throw new Error("Ya existe una bodega con ese nombre.");
+      }
+      if (existeruc) {
+        throw new Error("Ya existe una bodega con ese ruc.");
+      }
+      if (existerazon) {
+        throw new Error("Ya existe una bodega con esa razón social.");
+      }
+      await AllBodegas();
+      await createBodega(data);
+      await getBodegas();
       closeModal();
+      setErros([]);
     } catch (error) {
       console.error("Error al crear la bodega:", error);
-      // Mostrar un mensaje de error específico para la longitud incorrecta de idDoc
-      if (
-        error.message.includes("Documento de la bodega debe tener 11 dígitos")
-      ) {
-        // Actualizar el estado de errores para mostrar el mensaje
-        ERRORES.push("El Documento de la bodega debe tener 11 dígitos.");
-      } else {
-        // Manejar otros errores según sea necesario
-        ERRORES.push("Error al crear la bodega.");
-      }
+      setErros([error.message]);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -64,7 +94,7 @@ function AddBodegaPage({ closeModal }) {
         <input
           type="text"
           {...register("idDoc", { required: true })}
-          placeholder="Documento de la bodega"
+          placeholder="Documento(DNI o RUC)"
           className="registro-inputs"
         />
         {/* Mostrar un mensaje de error específico para la longitud incorrecta de idDoc */}

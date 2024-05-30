@@ -135,9 +135,7 @@ function SearchStock() {
       0
     );
 
-    doc.text(`Total Cantidad:`, 10, y + 10);
     doc.text(`Total Precio de Compra:`, 10, y + 20);
-    doc.text(`S/. ${totalCantidad}`, 165, y + 10);
     doc.text(`S/. ${totalPrecioCompra}`, 165, y + 20);
     doc.save("lista_productos.pdf");
   };

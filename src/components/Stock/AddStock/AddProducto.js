@@ -44,13 +44,19 @@ function Agregarstock() {
   };
 
   const onSubmit = async (data) => {
+    console.log(stocks);
     const { nombre, cantidad, preciocompra, precioventa } = data;
 
     if (!nombre || !cantidad || !preciocompra || !precioventa) {
       // Si algún campo está vacío, no se envía el formulario
       return;
     }
-
+    /*Corregir if (!/^(?=.*[A-Za-z])[A-Za-z0-9]+$/.test(nombre)) {
+      setFormErrors({
+        nombre: "El nombre del producto debe contener al menos una letra.",
+      });
+      return;
+    }*/
     if (
       !isValidInteger(cantidad) ||
       !isValidNumber(preciocompra) ||
@@ -83,11 +89,13 @@ function Agregarstock() {
     } else {
       createStock(data);
       setShowSuccessMessage(true);
+      getStocks();
     }
 
     setProductoCreado(data);
     setApiData(null);
     resetForm();
+    getStocks();
   };
 
   const isValidInteger = (value) => {
@@ -183,6 +191,7 @@ function Agregarstock() {
           className="registro-inputs"
         />
         {errors.nombre && <p className="redto">Campo requerido</p>}
+        {formErrors.nombre && <p className="redto">{formErrors.nombre}</p>}
 
         <label>Cantidad a ingresar</label>
         <input

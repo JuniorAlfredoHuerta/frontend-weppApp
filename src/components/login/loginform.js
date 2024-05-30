@@ -3,6 +3,8 @@ import "./loginform.css";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 function LoginForm() {
   const {
@@ -15,6 +17,7 @@ function LoginForm() {
 
   const navigate = useNavigate();
   const [connectionError, setConnectionError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -35,7 +38,6 @@ function LoginForm() {
       }
     } catch (error) {
       console.error("Error de conexión:", error.message);
-      setConnectionError("No se pudo establecer la conexión con el servidor");
     }
   });
 
@@ -71,12 +73,24 @@ function LoginForm() {
           className="registro-inputs"
         />
         {formErrors.correo && <p className="redto">Correo requerido</p>}
-        <input
-          type="password"
-          {...register("password", { required: true })}
-          placeholder="Contraseña"
-          className="registro-inputs"
-        />
+        <div className="password-field">
+          <input
+            type={showPassword ? "text" : "password"}
+            {...register("password", { required: true })}
+            placeholder="Contraseña"
+            className="registro-inputs"
+          />
+          <div
+            className="toggle-password"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? (
+              <FontAwesomeIcon icon={faEye} />
+            ) : (
+              <FontAwesomeIcon icon={faEyeSlash} />
+            )}
+          </div>
+        </div>
         {formErrors.password && <p className="redto">Contraseña requerida</p>}
         <button type="submit">Ingresar</button>
       </form>
