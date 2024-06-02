@@ -49,10 +49,10 @@ function MainMenu() {
 
       if (transcription) {
         const { comando, nombre_producto } = transcription;
-        console.log(comando);
+        //console.log(comando);
 
         if (comando === null || comando === undefined) {
-          console.log("Comando no reconocido o es null");
+          //console.log("Comando no reconocido o es null");
           setCommandNotRecognized(true);
           return;
         }
@@ -85,7 +85,7 @@ function MainMenu() {
             }
             break;
           case undefined:
-            console.log("NO SE RECONOCE COMANDO");
+            //console.log("NO SE RECONOCE COMANDO");
             setCommandNotRecognized(true);
             break;
         }

@@ -35,10 +35,17 @@ function GetVentas() {
 
   const handleApiResponse = (data) => {
     setApiData(data);
-    if (data.transcription.comando === "descargar") {
-      generatePDF(startDate, endDate);
+    if (startDate2 && endDate2) {
+      if (data.transcription.comando === "descargar") {
+        generatePDF(startDate2, endDate2);
+      }
+    } else {
+      if (data.transcription.comando === "descargar") {
+        generatePDF();
+      }
     }
   };
+
   const ajustarfechas = (startDate, endDate) => {
     const adjustedStartDate = new Date(startDate);
     adjustedStartDate.setHours(0, 0, 0, 0);
@@ -52,8 +59,8 @@ function GetVentas() {
   };
 
   const filterSalesByDate = (startDate, endDate) => {
-    console.log("filtering by dates:", startDate, endDate);
-    console.log("filtering by dates:", startDate2, endDate2);
+    //console.log("filtering by dates:", startDate, endDate);
+    //console.log("filtering by dates:", startDate2, endDate2);
 
     if (startDate2 && endDate2) {
       return ventas.filter((venta) => {
@@ -117,14 +124,23 @@ function GetVentas() {
           rows = 0;
         }
 
-        doc.text(producto.nombre, 10, y + 3);
-        doc.text(producto.cantidad.toString(), 50, y + 3);
-        doc.text(producto.precioVenta.toString(), 90, y + 3);
-        doc.text(
-          (producto.cantidad * producto.precioVenta).toString(),
-          140,
-          y + 3
-        );
+        // Verificación de valores antes de acceder a sus propiedades
+        const nombre = producto.nombre || "";
+        const cantidad =
+          producto.cantidad !== undefined ? producto.cantidad.toString() : "0";
+        const precioVenta =
+          producto.precioVenta !== undefined
+            ? producto.precioVenta.toString()
+            : "0";
+        const totalProducto =
+          producto.cantidad && producto.precioVenta
+            ? (producto.cantidad * producto.precioVenta).toString()
+            : "0";
+
+        doc.text(nombre, 10, y + 3);
+        doc.text(cantidad, 50, y + 3);
+        doc.text(precioVenta, 90, y + 3);
+        doc.text(totalProducto, 140, y + 3);
 
         y += 10;
         rows++;

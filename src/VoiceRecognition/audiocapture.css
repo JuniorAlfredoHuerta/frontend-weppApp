@@ -101,7 +101,6 @@
 }
 
 .microphone-button.disabled {
-  background-color: #ccc; /* Fondo gris claro */
-  color: #666; /* Texto gris oscuro */
-  cursor: not-allowed; /* Cambiar el cursor a 'no permitido' */
+  background-color: #ccc;
+  cursor: not-allowed;
 }

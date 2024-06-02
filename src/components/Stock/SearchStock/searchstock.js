@@ -40,9 +40,7 @@ function SearchStock() {
     const foundProduct = stocks.find(
       (product) => product.nombre === data.transcription.nombre_producto
     );
-    //console.log(foundProduct);
     if (data.transcription.comando === "eliminar") {
-      //console.log("ESTO SE ELIMINAR");
       if (foundProduct) {
         handleVentanaDelete(foundProduct.nombre, foundProduct._id);
       }
@@ -106,15 +104,18 @@ function SearchStock() {
 
     // Contenido de la tabla
     productsToInclude.forEach((product) => {
-      doc.line(10, y - 10, 10, y); // Línea izquierda
-      doc.line(50, y - 10, 50, y); // Línea entre columnas
-      doc.line(100, y - 10, 100, y); // Línea entre columnas
-      doc.line(150, y - 10, 150, y); // Línea entre columnas
-      doc.line(200, y - 10, 200, y); // Línea derecha
-      doc.line(10, y - 10, 200, y - 10); // Línea superior
-      doc.line(10, y, 200, y); // Línea inferior
+      const productNameLines = doc.splitTextToSize(product.nombre, 40); // Ajusta el ancho máximo de la celda según sea necesario
+      const cellHeight = 10 * productNameLines.length; // Altura de la celda basada en la cantidad de líneas de texto
 
-      doc.text(product.nombre, 15, y - 3);
+      doc.line(10, y - 10, 10, y + cellHeight - 10); // Línea izquierda
+      doc.line(50, y - 10, 50, y + cellHeight - 10); // Línea entre columnas
+      doc.line(100, y - 10, 100, y + cellHeight - 10); // Línea entre columnas
+      doc.line(150, y - 10, 150, y + cellHeight - 10); // Línea entre columnas
+      doc.line(200, y - 10, 200, y + cellHeight - 10); // Línea derecha
+      doc.line(10, y - 10, 200, y - 10); // Línea superior
+      doc.line(10, y + cellHeight - 10, 200, y + cellHeight - 10); // Línea inferior
+
+      doc.text(productNameLines, 15, y - 3); // Texto del nombre del producto
       doc.text(product.cantidad.toString(), 65, y - 3);
       doc.text(product.preciocompra.toString(), 105, y - 3);
       doc.text(
@@ -122,7 +123,7 @@ function SearchStock() {
         165,
         y - 3
       );
-      y += 10;
+      y += cellHeight; // Incrementar `y` según la altura de la celda
     });
 
     // Total de totales

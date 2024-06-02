@@ -110,6 +110,8 @@ function CreateVentaPage() {
         parseInt(realstock.cantidad) - parseInt(stocktest.cantidad);
       updateStock(stocktotupdate[i]._id, { cantidad: stockleft });
     }
+
+    console.log(nuevoFormato);
     createVenta(nuevoFormato);
     setShowSuccessMessage(true);
     setAppProductos([]);

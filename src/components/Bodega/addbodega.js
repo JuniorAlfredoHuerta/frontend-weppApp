@@ -23,7 +23,7 @@ function AddBodegaPage({ closeModal }) {
 
   const onSubmit = async (data) => {
     try {
-      if (!/^(?=.*[A-Za-z])[A-Za-z0-9]+$/.test(data.nombrebodega)) {
+      if (!/^(?=.*[A-Za-z])[\w\s.,'-]+$/.test(data.nombrebodega)) {
         throw new Error(
           "El nombre de la bodega debe contener al menos una letra."
         );
@@ -31,10 +31,10 @@ function AddBodegaPage({ closeModal }) {
       if (!/^\d+$/.test(data.idDoc)) {
         throw new Error("El RUC de la bodega debe contener solo números.");
       }
-      if (!/^(?=.*[A-Za-z])[A-Za-z0-9]+$/.test(data.razonsocial)) {
+      if (!/^(?=.*[A-Za-z])[\w\s.,'-]+$/.test(data.razonsocial)) {
         throw new Error("La razón social debe contener al menos una letra.");
       }
-      if (!/^(?=.*[A-Za-z])[A-Za-z0-9]+$/.test(data.ubicacion)) {
+      if (!/^(?=.*[A-Za-z])[\w\s.,'-]+$/.test(data.ubicacion)) {
         throw new Error(
           "La ubicación de la bodega debe contener al menos una letra."
         );

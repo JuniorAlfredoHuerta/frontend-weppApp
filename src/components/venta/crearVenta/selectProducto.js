@@ -4,13 +4,14 @@ import { parse, set } from "date-fns";
 
 function SelectProducto({ onProductoChange, apiData }) {
   const { stocks, getStocks, getStock } = useStock();
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState("");
   const [precioVenta, setPrecioVenta] = useState("");
   const [cantidad, setCantidad] = useState("");
   const [nombre, setNombre] = useState("");
+  const [cantidadStock, setCantidadStock] = useState(0);
+  const [isApiDataInitialized, setIsApiDataInitialized] = useState(false);
 
   const [total, setTotal] = useState("");
-  const [cantidadstock, setCantidadstock] = useState("");
 
   useEffect(() => {
     getStocks();
@@ -18,61 +19,26 @@ function SelectProducto({ onProductoChange, apiData }) {
 
   const stocksConCantidad = stocks.filter((stock) => stock.cantidad > 0);
 
+  const [isInitialized, setIsInitialized] = useState(false);
+
   useEffect(() => {
-    if (selectedProduct !== null && !apiData) {
+    if (selectedProduct !== "" && !apiData && !isInitialized) {
       const product = stocksConCantidad.find(
         (product) => product._id === selectedProduct
       );
-      setCantidadstock(parseInt(product.cantidad));
-      setNombre(product.nombre);
-      if (product && precioVenta === "") {
-        setPrecioVenta(product.precioventa || "");
+
+      if (product) {
+        setCantidadStock(parseInt(product.cantidad));
+        setNombre(product.nombre);
+
+        if (precioVenta === "") {
+          setPrecioVenta(product.precioventa || "");
+        }
+
+        setIsInitialized(true); // Set the flag to true after initialization
       }
     }
-  }, [selectedProduct, stocksConCantidad]);
-
-  useEffect(() => {
-    if (!apiData) {
-      if (cantidad !== "" && parseInt(cantidad) > cantidadstock) {
-        setCantidad(cantidadstock);
-      }
-      if (precioVenta !== "" && cantidad !== "") {
-        const calculatedTotal = parseInt(cantidad) * parseFloat(precioVenta);
-        setTotal(isNaN(calculatedTotal) ? "" : calculatedTotal);
-        onProductoChange({
-          _id: selectedProduct,
-          nombre: nombre,
-          cantidad: parseInt(cantidad),
-          precioVenta: precioVenta,
-          total: calculatedTotal,
-        });
-      } else {
-        setTotal("");
-      }
-    }
-  }, [precioVenta, cantidad]);
-
-  useEffect(() => {
-    if (apiData) {
-      const product = stocksConCantidad.find(
-        (product) => product.nombre === apiData.transcription.nombre_producto
-      );
-
-      setSelectedProduct(product._id);
-      ////console.log(apiData.transcription.cantidad);
-      ////console.log(apiData.transcription.precio);
-      setCantidad(parseInt(apiData.transcription.cantidad));
-      setPrecioVenta(parseFloat(apiData.transcription.precio));
-      const totalapi =
-        parseFloat(apiData.transcription.cantidad) *
-        parseFloat(apiData.transcription.precio);
-      ////console.log(totalapi);
-      setTotal(totalapi);
-      setNombre(apiData.transcription.nombre_producto);
-
-      ////console.log(selectedProduct);
-    }
-  }, []);
+  }, [selectedProduct, stocksConCantidad, apiData, precioVenta, isInitialized]);
 
   const handleProductChange = (e) => {
     if (!apiData) {
@@ -86,9 +52,51 @@ function SelectProducto({ onProductoChange, apiData }) {
     }
   };
 
-  ////console.log(" Cantidad", cantidad);
-  ////console.log("precio", precioVenta);
-  ////console.log("total", total);
+  useEffect(() => {
+    if (apiData && !isApiDataInitialized) {
+      const product = stocksConCantidad.find(
+        (product) => product.nombre === apiData.transcription.nombre_producto
+      );
+
+      if (product) {
+        setSelectedProduct(product._id);
+        setCantidad(parseInt(apiData.transcription.cantidad));
+        setPrecioVenta(parseFloat(apiData.transcription.precio));
+        const totalapi =
+          parseFloat(apiData.transcription.cantidad) *
+          parseFloat(apiData.transcription.precio);
+        setTotal(totalapi);
+        setNombre(apiData.transcription.nombre_producto);
+        setIsApiDataInitialized(true); // Set the flag to true after initialization
+      }
+    }
+  }, [apiData, stocksConCantidad, isApiDataInitialized]);
+
+  useEffect(() => {
+    onProductoChange({
+      _id: selectedProduct,
+      nombre: nombre,
+      cantidad: parseInt(cantidad),
+      precioVenta: precioVenta,
+      total: total,
+    });
+  }, [precioVenta, cantidad, total]);
+
+  const handleCantidadChange = (value) => {
+    setCantidad(value);
+    // Update total if needed
+    setTotal(value * precioVenta);
+  };
+
+  const handlePrecioVentaChange = (value) => {
+    setPrecioVenta(value);
+    // Update total if needed
+    setTotal(cantidad * value);
+  };
+
+  const handleNombreChange = (value) => {
+    setNombre(value);
+  };
   return (
     <div
       style={{
@@ -112,28 +120,18 @@ function SelectProducto({ onProductoChange, apiData }) {
         ))}
       </select>
       <input
-        type="text"
+        type="number"
         placeholder="Cantidad"
         style={{ marginRight: "10px" }}
-        value={
-          cantidad ||
-          (apiData &&
-            apiData.transcription &&
-            apiData.transcription.cantidad) ||
-          ""
-        }
-        onChange={(e) => setCantidad(e.target.value)}
+        value={cantidad}
+        onChange={(e) => handleCantidadChange(e.target.value)}
       />
       <input
-        type="text"
+        type="number"
         placeholder="Precio"
         style={{ marginRight: "10px" }}
-        value={
-          precioVenta ||
-          (apiData && apiData.transcription && apiData.transcription.precio) ||
-          ""
-        }
-        onChange={(e) => setPrecioVenta(e.target.value)}
+        value={precioVenta}
+        onChange={(e) => handlePrecioVentaChange(e.target.value)}
       />
       <input type="text" placeholder="Total" readOnly value={total} />
     </div>

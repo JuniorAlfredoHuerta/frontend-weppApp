@@ -44,19 +44,18 @@ function Agregarstock() {
   };
 
   const onSubmit = async (data) => {
-    console.log(stocks);
+    //console.log(stocks);
     const { nombre, cantidad, preciocompra, precioventa } = data;
 
     if (!nombre || !cantidad || !preciocompra || !precioventa) {
-      // Si algún campo está vacío, no se envía el formulario
       return;
     }
-    /*Corregir if (!/^(?=.*[A-Za-z])[A-Za-z0-9]+$/.test(nombre)) {
+    if (!/^(?=.*[A-Za-z])[\w\s.,'-]+$/.test(nombre)) {
       setFormErrors({
         nombre: "El nombre del producto debe contener al menos una letra.",
       });
       return;
-    }*/
+    }
     if (
       !isValidInteger(cantidad) ||
       !isValidNumber(preciocompra) ||
@@ -195,7 +194,7 @@ function Agregarstock() {
 
         <label>Cantidad a ingresar</label>
         <input
-          type="text"
+          type="number"
           {...register("cantidad", { required: true })}
           placeholder="Cantidad"
           className="registro-inputs"
@@ -205,7 +204,7 @@ function Agregarstock() {
 
         <label>Precio de compra</label>
         <input
-          type="text"
+          type="number"
           {...register("preciocompra", { required: true })}
           placeholder="Precio de compra"
           className="registro-inputs"
@@ -217,7 +216,7 @@ function Agregarstock() {
 
         <label>Precio de Venta</label>
         <input
-          type="text"
+          type="number"
           {...register("precioventa", { required: true })}
           placeholder="Precio de venta"
           className="registro-inputs"

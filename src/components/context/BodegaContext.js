@@ -38,7 +38,7 @@ export const BodegaProvider = ({ children }) => {
   const getBodegas = async () => {
     try {
       const res = await getBodegasRequest();
-      console.log(res.data);
+      //console.log(res.data);
       setBodegas(res.data);
     } catch (err) {
       //console.log(err);

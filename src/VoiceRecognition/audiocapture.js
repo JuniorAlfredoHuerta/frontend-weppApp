@@ -18,6 +18,7 @@ const AudioRecorder = ({ onApiResponse }) => {
   const [encoderRegistered, setEncoderRegistered] = useState(false);
   const [hasMicrophonePermission, setHasMicrophonePermission] = useState(false);
   const [bodegaSelected, setBodegaSelected] = useState(false);
+  const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
     const initializeEncoder = async () => {
@@ -27,7 +28,12 @@ const AudioRecorder = ({ onApiResponse }) => {
           await register(encoder);
           setEncoderRegistered(true);
         } catch (error) {
-          console.error("Error registering encoder:", error);
+          if (error.message.includes("There is already an encoder stored")) {
+            //console.log("Encoder already registered");
+            setEncoderRegistered(true);
+          } else {
+            //console.error("Error registering encoder:", error);
+          }
         }
       }
     };
@@ -66,6 +72,7 @@ const AudioRecorder = ({ onApiResponse }) => {
       };
       mediaRecorder.current.start();
       setIsRecording(true);
+      setProcessing(true);
     } else {
       mediaRecorder.current.stop();
       mediaRecorder.current.onstop = async () => {
@@ -78,6 +85,7 @@ const AudioRecorder = ({ onApiResponse }) => {
         mediaRecorder.current = null;
         audioChunks.current = [];
         setIsRecording(false);
+        setProcessing(false);
       };
     }
   };
@@ -85,25 +93,27 @@ const AudioRecorder = ({ onApiResponse }) => {
   const sendAudioToAPI = async (audioBlob, fileName) => {
     const formData = new FormData();
     formData.append("audio", audioBlob, fileName);
+    setProcessing(true);
 
     try {
       const response = await fetch(
-        "https://apienv-production.up.railway.app/transcribe",
+        //"https://apienv-production.up.railway.app/transcribe",
+        "http://localhost:5000/transcribe",
         {
           method: "POST",
           body: formData,
         }
       );
-
       if (!response.ok) {
         throw new Error("Error al enviar el audio a la API");
       }
 
       const data = await response.json();
-      //console.log(data);
       onApiResponse(data);
+      setProcessing(false);
     } catch (error) {
       console.error(error);
+      setProcessing(false);
     }
   };
 
