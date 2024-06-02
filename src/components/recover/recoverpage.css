@@ -1,0 +1,38 @@
+.menu-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-menu {
+  background-color: #3498db;
+  color: #fff;
+  padding: 20px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.container {
+  width: 300px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  margin: 20px auto;
+}
+
+.audio-recorder {
+  position: fixed;
+  bottom: 0;
+  opacity: 1;
+}
+
+.centered-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 10px;
+}

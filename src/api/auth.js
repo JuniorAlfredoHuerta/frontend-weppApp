@@ -9,3 +9,5 @@ export const verifyTokenRequest = () => axios.get(`/auth/verify`);
 
 export const editUserRequest = async (id, user) =>
   axios.put(`/users/${id}`, user);
+
+export const editpass = async (user) => axios.post(`/auth/edit`, user);

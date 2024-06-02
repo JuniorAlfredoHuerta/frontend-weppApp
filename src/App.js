@@ -15,6 +15,7 @@ import GetVentas from "./components/venta/Informe/getVentas";
 import Register from "./components/register/register";
 import EditPage from "./components/Bodega/editbodega/editbodega";
 import Edituser from "./components/User/edituser";
+import Recover from "./components/recover/recover-pass";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
               <Routes>
                 <Route exact path="/" Component={Login} />
                 <Route exact path="/register" Component={Register} />
+                <Route exact path="/recover" Component={Recover} />
                 <Route element={<ProtectedRoute />}>
                   <Route exact path="/user" Component={Edituser} />
                   <Route exact path="/editBodega" Component={EditPage} />

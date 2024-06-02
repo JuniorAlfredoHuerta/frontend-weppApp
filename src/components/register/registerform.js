@@ -19,6 +19,15 @@ function Registerform() {
   const [connectionError, setConnectionError] = useState(null);
   const [termsChecked, setTermsChecked] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [info, setInfo] = useState(false);
+
+  const closeInfo = () => {
+    if (isAuthenticated) {
+      setConnectionError(null);
+      navigate("/mainmenu");
+      window.location.reload();
+    }
+  };
 
   const onSubmit = handleSubmit(async (values) => {
     try {
@@ -34,18 +43,19 @@ function Registerform() {
       }
 
       signup(values);
-      const audioFile = new File([await fetchAudioFile()], "audio.wav");
+      //const audioFile = new File([await fetchAudioFile()], "audio.wav");
 
-      const formData = new FormData();
-      formData.append("audio", audioFile);
+      //const formData = new FormData();
+      //formData.append("audio", audioFile);
 
-      const response = await fetch("http://localhost:5000/transcribe", {
+      /*const response = await fetch("http://localhost:5000/transcribe", {
         method: "POST",
         body: formData,
-      });
+      });*/
       if (isAuthenticated) {
         setErrors([]);
       }
+      setInfo(true);
     } catch (error) {
       if (error.message.includes("La contraseña debe contener")) {
         setErrors([
@@ -64,19 +74,13 @@ function Registerform() {
     return passwordRegex.test(password);
   };
 
-  const fetchAudioFile = async () => {
+  /*const fetchAudioFile = async () => {
     const response = await fetch("../audio.wav");
     const blob = await response.blob();
     return blob;
-  };
+  };*/
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      setConnectionError(null);
-      navigate("/mainmenu");
-      window.location.reload();
-    }
-  }, [isAuthenticated, navigate]);
+  useEffect(() => {}, [isAuthenticated, navigate]);
 
   return (
     <div className="menu-container">
@@ -86,6 +90,16 @@ function Registerform() {
           {authErrors.map((error, i) => (
             <p key={i}>{error}</p>
           ))}
+        </div>
+      )}
+      {info && (
+        <div className="modal">
+          <div className="modal-content">
+            <div className="texto-grande">
+              !Su cuenta ha sido creado exitosamente!
+            </div>
+            <button onClick={closeInfo}>Continuar</button>
+          </div>
         </div>
       )}
       <form onSubmit={onSubmit}>

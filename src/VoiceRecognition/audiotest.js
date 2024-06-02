@@ -15,6 +15,8 @@ const AudioRecorder = ({ onApiResponse }) => {
   const audioChunks = useRef([]);
   const [isRecording, setIsRecording] = useState(false);
   const [encoderRegistered, setEncoderRegistered] = useState(false);
+  const [audioUrl, setAudioUrl] = useState(null); // Estado para almacenar la URL del audio
+
   useEffect(() => {
     const initializeEncoder = async () => {
       if (!encoderRegistered) {
@@ -48,6 +50,8 @@ const AudioRecorder = ({ onApiResponse }) => {
       mediaRecorder.current.stop();
       mediaRecorder.current.onstop = async () => {
         const blob = new Blob(audioChunks.current, { type: "audio/wav" });
+        const audioUrl = URL.createObjectURL(blob); // Crea la URL del blob
+        setAudioUrl(audioUrl); // Guarda la URL en el estado
         try {
           await sendAudioToAPI(blob, "recorded-audio.wav");
         } catch (error) {
@@ -100,7 +104,13 @@ const AudioRecorder = ({ onApiResponse }) => {
           <FontAwesomeIcon icon={faUser} />
         </button>
       </Link>
+      {audioUrl && (
+        <a href={audioUrl} download="recorded-audio.wav">
+          Descargar audio
+        </a>
+      )}
     </div>
   );
 };
+
 export default AudioRecorder;

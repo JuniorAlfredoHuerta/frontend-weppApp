@@ -318,7 +318,8 @@ function MainMenu() {
           </>
         ) : (
           <div className="select-bodega-message">
-            Elija una bodega para empezar la experiencia
+            Elija una bodega para empezar
+             la experiencia
           </div>
         )}
       </div>

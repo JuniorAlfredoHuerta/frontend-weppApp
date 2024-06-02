@@ -4,6 +4,7 @@ import {
   loginRequest,
   verifyTokenRequest,
   editUserRequest,
+  editpass,
 } from "../../api/auth";
 import Cookies from "js-cookie";
 
@@ -59,6 +60,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const edit = async (user) => {
+    try {
+      const res = await editpass(user);
+      return res;
+      setErrors([]);
+    } catch (error) {
+      if (error.response) {
+        setErrors(error.response.data);
+      } else {
+        setErrors(["Error de conexión: No se pudo conectar con el servidor"]);
+      }
+    }
+  };
   const logout = () => {
     Cookies.remove("token");
     Cookies.remove("tokenbodega");
@@ -120,6 +134,7 @@ export const AuthProvider = ({ children }) => {
         errors,
         setErrors,
         loading,
+        edit,
       }}
     >
       {children}

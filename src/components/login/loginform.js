@@ -23,16 +23,16 @@ function LoginForm() {
     try {
       await signin(data);
       setConnectionError(null);
-      const audioFile = new File([await fetchAudioFile()], "audio.wav");
+      //const audioFile = new File([await fetchAudioFile()], "audio.wav");
 
-      const formData = new FormData();
-      formData.append("audio", audioFile);
+      //const formData = new FormData();
+      //formData.append("audio", audioFile);
 
-      //const response = await fetch("https://apimodelo-production.up.railway.app/transcribe", {
+      /* //const response = await fetch("https://apimodelo-production.up.railway.app/transcribe", {
       const response = await fetch("http://localhost:5000/transcribe", {
         method: "POST",
         body: formData,
-      });
+      });*/
       if (isAuthenticated) {
         setErrors([]);
       }
@@ -41,11 +41,11 @@ function LoginForm() {
     }
   });
 
-  const fetchAudioFile = async () => {
+  /*const fetchAudioFile = async () => {
     const response = await fetch("../audio.wav");
     const blob = await response.blob();
     return blob;
-  };
+  };*/
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -54,6 +54,10 @@ function LoginForm() {
       window.location.reload();
     }
   }, [isAuthenticated, navigate]);
+
+  const handleForgotPassword = () => {
+    navigate("/recover");
+  };
 
   return (
     <div className="menu-container">
@@ -92,6 +96,13 @@ function LoginForm() {
           </div>
         </div>
         {formErrors.password && <p className="redto">Contraseña requerida</p>}
+        <button
+          type="button"
+          className="forgot-password-button"
+          onClick={handleForgotPassword}
+        >
+          ¿He olvidado mi contraseña?
+        </button>
         <button type="submit">Ingresar</button>
       </form>
     </div>
