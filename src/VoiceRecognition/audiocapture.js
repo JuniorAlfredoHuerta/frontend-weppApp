@@ -97,8 +97,8 @@ const AudioRecorder = ({ onApiResponse }) => {
 
     try {
       const response = await fetch(
-        //"https://apienv-production.up.railway.app/transcribe",
-        "http://localhost:5000/transcribe",
+        "https://apienv-production.up.railway.app/transcribe",
+        //"http://localhost:5000/transcribe",
         {
           method: "POST",
           body: formData,
