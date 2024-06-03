@@ -52,12 +52,19 @@ function Registerform() {
         method: "POST",
         body: formData,
       });*/
+      /*if (res.ok) {
+        setInfo(true);
+      }*/
+
       if (isAuthenticated) {
         setErrors([]);
       }
-      setInfo(true);
     } catch (error) {
       if (error.message.includes("La contraseña debe contener")) {
+        setErrors([
+          "La contraseña debe contener al menos 8 caracteres, y por lo menos una mayuscula, un numero y un caracter especial",
+        ]);
+      } else if (authErrors.includes("La contraseña debe contener")) {
         setErrors([
           "La contraseña debe contener al menos 8 caracteres, y por lo menos una mayuscula, un numero y un caracter especial",
         ]);
@@ -80,7 +87,11 @@ function Registerform() {
     return blob;
   };*/
 
-  useEffect(() => {}, [isAuthenticated, navigate]);
+  useEffect(() => {
+    if (isAuthenticated) {
+      setInfo(true);
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
     <div className="menu-container">
