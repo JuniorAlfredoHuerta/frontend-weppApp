@@ -11,7 +11,7 @@ import { MediaRecorder, register } from "extendable-media-recorder";
 import { connect } from "extendable-media-recorder-wav-encoder";
 import Cookies from "js-cookie";
 
-const AudioRecorder = ({ onApiResponse }) => {
+const AudioRecorder = ({ onApiResponse, onError }) => {
   const mediaRecorder = useRef(null);
   const audioChunks = useRef([]);
   const [isRecording, setIsRecording] = useState(false);
@@ -29,10 +29,10 @@ const AudioRecorder = ({ onApiResponse }) => {
           setEncoderRegistered(true);
         } catch (error) {
           if (error.message.includes("There is already an encoder stored")) {
-            //console.log("Encoder already registered");
             setEncoderRegistered(true);
           } else {
-            //console.error("Error registering encoder:", error);
+            console.error("Error registering encoder:", error);
+            onError(error);
           }
         }
       }
@@ -45,6 +45,7 @@ const AudioRecorder = ({ onApiResponse }) => {
       } catch (error) {
         setHasMicrophonePermission(false);
         console.error("Microphone permission denied:", error);
+        onError(error);
       }
     };
 
@@ -61,18 +62,25 @@ const AudioRecorder = ({ onApiResponse }) => {
 
   const toggleRecording = async () => {
     if (!isRecording) {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorder.current = new MediaRecorder(stream, {
-        mimeType: "audio/wav",
-      });
-      mediaRecorder.current.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunks.current.push(event.data);
-        }
-      };
-      mediaRecorder.current.start();
-      setIsRecording(true);
-      setProcessing(true);
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
+        mediaRecorder.current = new MediaRecorder(stream, {
+          mimeType: "audio/wav",
+        });
+        mediaRecorder.current.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            audioChunks.current.push(event.data);
+          }
+        };
+        mediaRecorder.current.start();
+        setIsRecording(true);
+        setProcessing(true);
+      } catch (error) {
+        console.error("Error starting recording:", error);
+        onError(error);
+      }
     } else {
       mediaRecorder.current.stop();
       mediaRecorder.current.onstop = async () => {
@@ -80,7 +88,8 @@ const AudioRecorder = ({ onApiResponse }) => {
         try {
           await sendAudioToAPI(blob, "recorded-audio.wav");
         } catch (error) {
-          console.error(error);
+          console.error("Error stopping recording:", error);
+          onError(error);
         }
         mediaRecorder.current = null;
         audioChunks.current = [];
@@ -97,8 +106,9 @@ const AudioRecorder = ({ onApiResponse }) => {
 
     try {
       const response = await fetch(
-        "https://apienv-production.up.railway.app/transcribe",
-        //"http://localhost:5000/transcribe",
+        //"https://apienv-production.up.railway.app/transcribe",
+        "http://localhost:5000/transcribe",
+
         {
           method: "POST",
           body: formData,
@@ -112,7 +122,8 @@ const AudioRecorder = ({ onApiResponse }) => {
       onApiResponse(data);
       setProcessing(false);
     } catch (error) {
-      console.error(error);
+      console.error("Error sending audio to API:", error);
+      onError(error);
       setProcessing(false);
     }
   };

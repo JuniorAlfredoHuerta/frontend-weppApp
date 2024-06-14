@@ -85,6 +85,12 @@ function EditPage() {
     alert("Bodega eliminada correctamente");
   };
 
+  const [resourceError, setResourceError] = useState(false);
+
+  const handleResourceError = () => {
+    setResourceError(true);
+  };
+
   return (
     <div className="menu-container">
       <nav className="menu-nav">
@@ -181,9 +187,22 @@ function EditPage() {
           </div>
         </div>
       )}
-
+      {resourceError && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={() => setResourceError(false)}>
+              &times;
+            </span>
+            <div className="texto-grande">Error de Carga de Recursos</div>
+            <div>
+              Ha ocurrido un error al cargar los recursos. Por favor, inténtelo
+              de nuevo más tarde.
+            </div>
+          </div>
+        </div>
+      )}
       <div className="audio-recorder">
-        <AudioRecorder />
+        <AudioRecorder onError={handleResourceError} />
       </div>
     </div>
   );

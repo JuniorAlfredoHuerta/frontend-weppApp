@@ -5,7 +5,6 @@ import Cookies from "js-cookie";
 const instance = axios.create({
   //baseURL: "http://localhost:7000/api",
   baseURL: "https://backend-production-a138.up.railway.app/api",
-
   headers: {
     Authorization: Cookies.get()?.token,
     tokenbodega: Cookies.get()?.tokenbodega,

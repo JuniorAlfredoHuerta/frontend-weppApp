@@ -69,8 +69,6 @@ function CreateVentaPage() {
     updatedProductos[index] = producto;
     setAppProductos(updatedProductos);
 
-    // Agregar un //console.log para verificar los datos actualizados
-    ////console.log("Datos del producto actualizados:", updatedProductos);
     if (updatedProductos) {
     }
   };
@@ -125,6 +123,12 @@ function CreateVentaPage() {
       }
     }
     return true;
+  };
+
+  const [resourceError, setResourceError] = useState(false);
+
+  const handleResourceError = () => {
+    setResourceError(true);
   };
   return (
     <div className="menu-container">
@@ -208,9 +212,25 @@ function CreateVentaPage() {
           Registrar
         </button>
       </div>
-
+      {resourceError && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={() => setResourceError(false)}>
+              &times;
+            </span>
+            <div className="texto-grande">Error de Carga de Recursos</div>
+            <div>
+              Ha ocurrido un error al cargar los recursos. Por favor, inténtelo
+              de nuevo más tarde.
+            </div>
+          </div>
+        </div>
+      )}
       <div className="audio-recorder">
-        <AudioRecorder onApiResponse={handleApiResponse} />
+        <AudioRecorder
+          onApiResponse={handleApiResponse}
+          onError={handleResourceError}
+        />
       </div>
     </div>
   );

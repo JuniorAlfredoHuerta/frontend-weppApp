@@ -21,6 +21,7 @@ function MainMenu() {
   const [ApiData, setApiData] = useState(null);
   const [modal, setModal] = useState(false);
   const [info, setinfo] = useState(false);
+  const [resourceError, setResourceError] = useState(false);
 
   const navigate = useNavigate();
   const { getBodegas, bodegas, gettokenbodega, calltokenbodega } = useBodega();
@@ -39,6 +40,10 @@ function MainMenu() {
 
   useEffect(() => {
     getBodegas();
+  }, []);
+
+  useEffect(() => {
+    console.log(ApiData);
   }, []);
 
   const handleApiResponse = (data) => {
@@ -146,6 +151,9 @@ function MainMenu() {
     } catch (error) {}
   };
 
+  const handleResourceError = () => {
+    setResourceError(true);
+  };
   return (
     <div className="menu-container">
       <nav className="menu-nav">
@@ -318,8 +326,7 @@ function MainMenu() {
           </>
         ) : (
           <div className="select-bodega-message">
-            Elija una bodega para empezar
-             la experiencia
+            Elija una bodega para empezar la experiencia
           </div>
         )}
       </div>
@@ -337,9 +344,26 @@ function MainMenu() {
           </div>
         </div>
       )}
+      {resourceError && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={() => setResourceError(false)}>
+              &times;
+            </span>
+            <div className="texto-grande">Error de Carga de Recursos</div>
+            <div>
+              Ha ocurrido un error al cargar los recursos. Por favor, inténtelo
+              de nuevo más tarde.
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="audio-recorder">
-        <AudioRecorder onApiResponse={handleApiResponse} />
+        <AudioRecorder
+          onApiResponse={handleApiResponse}
+          onError={handleResourceError}
+        />
       </div>
     </div>
   );
